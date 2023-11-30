@@ -3,8 +3,8 @@ export default function Navbar({ onClick }) {
     <div className="navbar bg-base-100">
       <div className="flex-none">
         <button
-          //   htmlFor="my-drawer-2"
           className="btn btn-square btn-ghost drawer-button lg:hidden"
+          onClick={onClick}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
