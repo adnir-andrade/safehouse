@@ -17,13 +17,13 @@ function App() {
     <>
       <Navbar onClick={changeState} />
       <Sidebar isChecked={isChecked} onClick={changeState}>
-        <div className="flex flex-col h-4/5 lg:flex-row py-12">
-          <div className="grid flex-grow card bg-base-300 rounded-box place-items-center">
+        <div className="flex flex-col xl:flex-row my-12 mx-6">
+          <div className="grid flex-grow card bg-base-300 bg-opacity-40 rounded-box place-items-center py-9">
             <Card title="Register New Survivor">
               <Form></Form>
             </Card>
           </div>
-          <div className="divider lg:divider-horizontal">OR</div>
+          <div className="divider lg:divider-horizontal" />
           <div className="grid flex-grow card bg-base-300 rounded-box place-items-center">
             content
           </div>
