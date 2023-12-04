@@ -1,7 +1,7 @@
 class Survivors::CreateForm
   include ActiveModel::Model
 
-  attr_accessor :name, :gender, :age, :longitude, :latitude
+  attr_accessor :name, :gender, :age, :longitude, :latitude, :survivor
 
   validates :name, presence: true
   validates :age, presence: true
@@ -12,21 +12,13 @@ class Survivors::CreateForm
   validate :valid_location?
 
   def create
-    return nil if invalid?
+    return false if invalid?
 
     create_survivor
   end
 
-  def valid_location?
-    latitude_range = (-90.0..90.0)
-    longitude_range = (-180.0..180.0)
-
-    return if (latitude_range.cover?(latitude.to_f) && longitude_range.cover?(longitude.to_f))
-
-    errors.add(:base, 'Coordinate is out of bound')
-  end
-
   private
+
   def create_survivor   
     survivor = Survivor.new(name: name, gender: gender, age: age, is_alive: true)
     survivor.save
@@ -37,10 +29,19 @@ class Survivors::CreateForm
       survivor.update(location_id: location.id)
     else
       errors.merge!(survivor.errors)
-      nil
+      return false
     end
 
-    survivor
+    return true
+  end
+
+  def valid_location?
+    latitude_range = (-90.0..90.0)
+    longitude_range = (-180.0..180.0)
+
+    return if (latitude_range.cover?(latitude.to_f) && longitude_range.cover?(longitude.to_f))
+
+    errors.add(:base, 'Coordinate is out of bound')
   end
 
 end
