@@ -9,10 +9,21 @@ class Survivors::CreateForm
   validates :longitude, presence: true
   validates :latitude, presence: true
 
+  validate :valid_location?
+
   def create
     return nil if invalid?
 
     create_survivor
+  end
+
+  def valid_location?
+    latitude_range = (-90.0..90.0)
+    longitude_range = (-180.0..180.0)
+
+    return if (latitude_range.cover?(latitude.to_f) && longitude_range.cover?(longitude.to_f))
+
+    errors.add(:base, 'Coordinate is out of bound')
   end
 
   private
