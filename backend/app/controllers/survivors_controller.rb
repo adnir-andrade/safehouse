@@ -35,18 +35,16 @@ class SurvivorsController < ApplicationController
   end
   
   def create
-    # binding.pry
     form = Survivors::CreateForm.new(survivor_params)
-    @survivor = Survivor.new(survivor_params)
     
-    if form.create
+    if (@survivor = form.create)
       location = @survivor.locations.build(location_params)
       location.save
       @survivor.update(location_id: location.id)
 
       render json: @survivor, status: :created, location: @survivor
     else
-      render json: @survivor.errors, status: :unprocessable_entity
+      render json: { error: 'There was an error trying to CREATE survivor', details: @survivor.errors }, status: :unprocessable_entity
     end
   end
 
@@ -92,7 +90,7 @@ class SurvivorsController < ApplicationController
   end
   
   def base_survivor_attributes
-    [:name, :gender, :age, :is_alive]
+    [:name, :gender, :age]
   end
 
 end
