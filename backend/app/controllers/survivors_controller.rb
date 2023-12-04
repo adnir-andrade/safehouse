@@ -29,18 +29,18 @@ class SurvivorsController < ApplicationController
 
     render json: survivor_complete
   end
+
+  def new
+    @survivor = Survivor.new
+  end
   
   def create
-    @survivor = Survivor.new(survivor_params)
+    form = Survivors::CreateForm.new(survivor_params.merge(location_params))
     
-    if @survivor.save
-      location = @survivor.locations.build(location_params)
-      location.save
-      @survivor.update(location_id: location.id)
-
-      render json: @survivor, status: :created, location: @survivor
+    if form.create
+      render json: form, status: :created, location: @survivor
     else
-      render json: @survivor.errors, status: :unprocessable_entity
+      render json: { error: 'There was an error trying to CREATE survivor', details: form.errors }, status: :unprocessable_entity
     end
   end
 
@@ -58,7 +58,7 @@ class SurvivorsController < ApplicationController
   
   def archive
     if @survivor.update(is_archived: true)
-        render json: @suvivor
+        render json: @survivor
     else
       render json: @survivor.errors, status: :unprocessable_entity
     end
@@ -86,7 +86,7 @@ class SurvivorsController < ApplicationController
   end
   
   def base_survivor_attributes
-    [:name, :gender, :age, :is_alive]
+    [:name, :gender, :age]
   end
 
 end
