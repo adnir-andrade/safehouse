@@ -35,13 +35,9 @@ class SurvivorsController < ApplicationController
   end
   
   def create
-    form = Survivors::CreateForm.new(survivor_params)
+    form = Survivors::CreateForm.new(survivor_params.merge(location_params))
     
     if (@survivor = form.create)
-      location = @survivor.locations.build(location_params)
-      location.save
-      @survivor.update(location_id: location.id)
-
       render json: @survivor, status: :created, location: @survivor
     else
       render json: { error: 'There was an error trying to CREATE survivor', details: @survivor.errors }, status: :unprocessable_entity
