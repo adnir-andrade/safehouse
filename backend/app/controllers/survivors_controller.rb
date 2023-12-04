@@ -29,11 +29,17 @@ class SurvivorsController < ApplicationController
 
     render json: survivor_complete
   end
+
+  def new
+    @survivor = Survivor.new
+  end
   
   def create
+    # binding.pry
+    form = Survivors::CreateForm.new(survivor_params)
     @survivor = Survivor.new(survivor_params)
     
-    if @survivor.save
+    if form.create
       location = @survivor.locations.build(location_params)
       location.save
       @survivor.update(location_id: location.id)
@@ -58,7 +64,7 @@ class SurvivorsController < ApplicationController
   
   def archive
     if @survivor.update(is_archived: true)
-        render json: @suvivor
+        render json: @survivor
     else
       render json: @survivor.errors, status: :unprocessable_entity
     end
