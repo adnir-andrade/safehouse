@@ -1,6 +1,6 @@
 class LocationSerializer < ActiveModel::Serializer
 
-  attributes :id, :longitude, :latitude, :survivor_id, :created_at, :updated_at
+  attributes :id, :longitude, :latitude, :created_at, :updated_at
 
   belongs_to :survivor_model, serializer: SurvivorSerializer
 
