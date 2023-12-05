@@ -27,7 +27,7 @@ class SurvivorsController < ApplicationController
       end
     end
 
-    render json: survivor_complete
+    render json: @survivors, adapter: :json
   end
 
   def new
