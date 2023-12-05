@@ -3,31 +3,8 @@ class SurvivorsController < ApplicationController
 
   def index
     @survivors = Survivor.all
-    survivor_complete = []
-  
-    @survivors.each do |survivor|
-      unless survivor.is_archived?
-        survivor_last_location = survivor.locations.last
-    
-        survivor_data = {
-          id: survivor.id,
-          name: survivor.name,
-          age: survivor.age,
-          gender: survivor.gender,
-          is_alive: survivor.is_alive,
-          location_id: survivor.location_id,
-          longitude: survivor_last_location&.longitude,
-          latitude: survivor_last_location&.latitude,
-          inventory_id: survivor.inventory_id,
-          created_at: survivor.created_at,
-          updated_at: survivor.updated_at,
-        }
-    
-        survivor_complete << survivor_data
-      end
-    end
 
-    render json: survivor_complete
+    render json: @survivors, adapter: :json
   end
 
   def new
