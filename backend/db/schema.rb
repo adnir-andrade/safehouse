@@ -24,6 +24,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_05_144944) do
   create_table "inventories_items", force: :cascade do |t|
     t.bigint "item_id"
     t.bigint "inventory_id"
+    t.integer "quantity"
     t.index ["inventory_id"], name: "index_inventories_items_on_inventory_id"
     t.index ["item_id"], name: "index_inventories_items_on_item_id"
   end

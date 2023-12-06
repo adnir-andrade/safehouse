@@ -3,6 +3,7 @@ class AddInventoriesAndItems < ActiveRecord::Migration[7.1]
     create_table :inventories_items do |t|  
       t.belongs_to :item, index: true 
       t.belongs_to :inventory, index: true
+      t.integer :quantity
     end
   end
 end
