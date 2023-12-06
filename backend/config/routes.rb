@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     resources :locations
   end
 
+  resources :items
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
