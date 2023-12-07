@@ -6,5 +6,12 @@ Rails.application.routes.draw do
 
   resources :items
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  resources :inventories, only: [:show, :update] do
+    post '/add-item', on: :member, to: 'inventories#add_item', as: 'add-item'
+  end
+  
+
+  resources :inventoriesitem
+
+  resourealth#show", as: :rails_health_check
 end
