@@ -14,7 +14,6 @@ class InventoriesController < ApplicationController
   end
 
   def add_item
-    # binding.pry
     form = Inventories::CreateForm.new(inventory_params)
 
     if form.add_item
@@ -27,7 +26,6 @@ class InventoriesController < ApplicationController
   private
   
   def set_inventory
-    # binding.pry
     @inventory = Inventory.find(params[:id])
   end
 
