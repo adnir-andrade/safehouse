@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_22_142531) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_05_144944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,22 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_22_142531) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["survivor_id"], name: "index_inventories_on_survivor_id"
+  end
+
+  create_table "inventories_items", force: :cascade do |t|
+    t.bigint "item_id"
+    t.bigint "inventory_id"
+    t.integer "quantity"
+    t.index ["inventory_id"], name: "index_inventories_items_on_inventory_id"
+    t.index ["item_id"], name: "index_inventories_items_on_item_id"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.integer "value"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "locations", force: :cascade do |t|

@@ -2,8 +2,10 @@
 
 one:
   name: MyString
-  valueÃ: 1
+  value: 1
+  description: MyString
 
 two:
   name: MyString
-  valueÃ: 1
+  value: 1
+  description: MyString
