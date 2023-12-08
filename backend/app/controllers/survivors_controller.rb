@@ -51,8 +51,6 @@ class SurvivorsController < ApplicationController
     @survivor = Survivor.find(params[:id])
   end
 
-  # Discover why survivor_params is not working as intended 
-
   def survivor_params
     permitted_params = base_survivor_attributes + [:longitude, :latitude]
     params.require(:survivor).permit(*permitted_params)
