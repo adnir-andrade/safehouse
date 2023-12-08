@@ -17,18 +17,20 @@ class Inventories::CreateForm
   private
 
   def store_item 
-    if InventoriesItem.exists?(item_id: item_id, inventory_id: id)
-      errors.add(:item_id, 'already exists in the given inventory')
-      # TODO: If it exists, add to quantity
-      return false
+    inventory_item = InventoriesItem.find_or_initialize_by(item_id: item_id, inventory_id: id)
+
+    if inventory_item.persisted?
+      puts "Trying to add a quantity to inventoryitem"
+      inventory_item.quantity += quantity
+    else
+      inventory_item.quantity = quantity
     end
 
-    return false unless valid?
-
-    # binding.pry
-
-    inventory_item = InventoryItem.find_or_initialize_by(item_id: item_id, inventory_id: inventory_id)
-
-    return true
+    if inventory_item.save
+      return true
+    else
+      errors.merge!(item.errors)
+      return false
+    end
   end
 end
