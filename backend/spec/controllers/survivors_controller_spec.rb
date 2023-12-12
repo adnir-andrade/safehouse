@@ -40,7 +40,7 @@ RSpec.describe SurvivorsController, type: :controller do
       end
 
       it "successfully creates a survivor with valid age" do
-        survivor = attributes_for(:survivor, age: 17)
+        survivor = attributes_for(:survivor, age: 120)
         location = attributes_for(:location)
 
         post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
@@ -52,25 +52,38 @@ RSpec.describe SurvivorsController, type: :controller do
 
     context "with invalid attributes" do
       it "does not create a survivor without a name" do
-        post :create, params: { survivor: attributes_for(:survivor, name: nil) }
+        survivor = attributes_for(:survivor, name: nil)
+        location = attributes_for(:location)
+
+        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
 
         expect(response).to have_http_status(422)
         expect(Survivor.count).to eq(0)
       end
 
-      it "does not create a survivor without age" do
-        post :create, params: { survivor: attributes_for(:survivor, age: nil) }
+      it "does not create a survivor without a age" do
+        survivor = attributes_for(:survivor, age: nil)
+        location = attributes_for(:location)
+
+        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
 
         expect(response).to have_http_status(422)
         expect(Survivor.count).to eq(0)
       end
 
       it "does not create a survivor with an invalid age" do
-        post :create, params: { survivor: attributes_for(:survivor, age: 777) }
+        survivor = attributes_for(:survivor, age: 121)
+        location = attributes_for(:location)
+
+        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
 
         expect(response).to have_http_status(422)
         expect(Survivor.count).to eq(0)
       end
+
+      # if "does not create a survivor with an invalid longitude" do
+      #   post :create, params: { survivor: }
+      # end
     end
   end
 end
