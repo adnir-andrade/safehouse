@@ -81,9 +81,25 @@ RSpec.describe SurvivorsController, type: :controller do
         expect(Survivor.count).to eq(0)
       end
 
-      # if "does not create a survivor with an invalid longitude" do
-      #   post :create, params: { survivor: }
-      # end
+      it "does not create a survivor with an invalid longitude" do
+        survivor = attributes_for(:survivor)
+        location = attributes_for(:location, latitude: 91)
+
+        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude]}
+
+        expect(response).to have_http_status(422)
+        expect(Survivor.count).to eq(0)
+      end
+
+      it "does not create a survivor with an invalid latitude" do
+        survivor = attributes_for(:survivor)
+        location = attributes_for(:location, longitude: 181)
+
+        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude]}
+
+        expect(response).to have_http_status(422)
+        expect(Survivor.count).to eq(0)
+      end
     end
   end
 end
