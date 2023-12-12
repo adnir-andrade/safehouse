@@ -20,7 +20,7 @@ RSpec.describe SurvivorsController, type: :controller do
           locations: [], 
           created_at: e.created_at.strftime('%Y-%m-%d'),
           updated_at: e.updated_at.strftime('%Y-%m-%d'),
-          inventory_id: nil,
+          inventory_id: e.inventory_id,
           location_id: e.location_id
          } }
       )
