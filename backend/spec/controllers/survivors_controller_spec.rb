@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe SurvivorsController, type: :controller do
+  let(:survivor) { attributes_for(:survivor) }
+  let(:location) { attributes_for(:location) }
+  let(:longitude) { location[:longitude] }
+  let(:latitude) { location[:latitude] }
+
   describe 'GET #index' do
     it 'returns all survivors' do
       create_list(:survivor, 10)
@@ -30,76 +35,59 @@ RSpec.describe SurvivorsController, type: :controller do
   describe 'POST #create' do
     context "with valid attributes" do
       it "successfully creates a survivor" do
-        survivor = attributes_for(:survivor)
-        location = attributes_for(:location)
-        
-        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
+        post :create, params: { survivor: survivor, longitude: longitude, latitude: latitude }
 
-        expect(response).to have_http_status(201)
-        expect(Survivor.count).to eq(1)
+        validade_successful_creation(response)
       end
 
       it "successfully creates a survivor with valid age" do
-        survivor = attributes_for(:survivor, age: 120)
-        location = attributes_for(:location)
+        post :create, params: { survivor: survivor.merge(age: 120), longitude: longitude, latitude: latitude }
 
-        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
-
-        expect(response).to have_http_status(201)
-        expect(Survivor.count).to eq(1)
+        validade_successful_creation(response)
       end
     end
 
     context "with invalid attributes" do
       it "does not create a survivor without a name" do
-        survivor = attributes_for(:survivor, name: nil)
-        location = attributes_for(:location)
+        post :create, params: { survivor: survivor.merge(name: nil), longitude: longitude, latitude: latitude }
 
-        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
-
-        expect(response).to have_http_status(422)
-        expect(Survivor.count).to eq(0)
+        validade_unsuccessful_creation(response)
       end
 
       it "does not create a survivor without a age" do
-        survivor = attributes_for(:survivor, age: nil)
-        location = attributes_for(:location)
+        post :create, params: { survivor: survivor.merge(age: nil), longitude: longitude, latitude: latitude }
 
-        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
-
-        expect(response).to have_http_status(422)
-        expect(Survivor.count).to eq(0)
+        validade_unsuccessful_creation(response)
       end
 
       it "does not create a survivor with an invalid age" do
-        survivor = attributes_for(:survivor, age: 121)
-        location = attributes_for(:location)
+        post :create, params: { survivor: survivor.merge(age: 121), longitude: longitude, latitude: latitude }
 
-        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude] }
-
-        expect(response).to have_http_status(422)
-        expect(Survivor.count).to eq(0)
+        validade_unsuccessful_creation(response)
       end
 
       it "does not create a survivor with an invalid longitude" do
-        survivor = attributes_for(:survivor)
-        location = attributes_for(:location, latitude: 91)
+        post :create, params: { survivor: survivor, longitude: longitude, latitude: 91 }
 
-        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude]}
-
-        expect(response).to have_http_status(422)
-        expect(Survivor.count).to eq(0)
+        validade_unsuccessful_creation(response)
       end
 
       it "does not create a survivor with an invalid latitude" do
-        survivor = attributes_for(:survivor)
-        location = attributes_for(:location, longitude: 181)
+        post :create, params: { survivor: survivor, longitude: 181, latitude: latitude }
 
-        post :create, params: { survivor: survivor, longitude: location[:longitude], latitude: location[:latitude]}
-
-        expect(response).to have_http_status(422)
-        expect(Survivor.count).to eq(0)
+        validade_unsuccessful_creation(response)
       end
     end
   end
+
+  def validade_successful_creation(response)
+    expect(response).to have_http_status(201)
+    expect(Survivor.count).to eq(1)
+  end
+  
+  def validade_unsuccessful_creation(response)
+    expect(response).to have_http_status(422)
+    expect(Survivor.count).to eq(0)
+  end
+  
 end
