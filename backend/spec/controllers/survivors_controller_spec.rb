@@ -33,59 +33,121 @@ RSpec.describe SurvivorsController, type: :controller do
   end
 
   describe 'POST #create' do
-    context "with valid attributes" do
-      it "successfully creates a survivor" do
+    context "using valid attributes" do
+      it "creates a survivor" do
         post :create, params: { survivor: survivor, longitude: longitude, latitude: latitude }
 
-        validade_successful_creation(response)
+        validate_successful_creation(response)
       end
 
-      it "successfully creates a survivor with valid age" do
-        post :create, params: { survivor: survivor.merge(age: 120), longitude: longitude, latitude: latitude }
+      context "for age" do
+        it "creates a survivor with minimum valid age" do
+          post :create, params: { survivor: survivor.merge(age: 15), longitude: longitude, latitude: latitude }
+  
+          validate_successful_creation(response)
+        end
+  
+        it "creates a survivor with maximum valid age" do
+          post :create, params: { survivor: survivor.merge(age: 90), longitude: longitude, latitude: latitude }
+  
+          validate_successful_creation(response)
+        end
+      end
 
-        validade_successful_creation(response)
+      context "for location" do
+        it "creates a survivor with minimum allowed latitude" do
+          post :create, params: { survivor: survivor, longitude: longitude, latitude: -90}
+
+          validate_successful_creation(response)
+        end
+
+        it "creates a survivor with maximum allowed latitude" do
+          post :create, params: { survivor: survivor, longitude: longitude, latitude: 90}
+
+          validate_successful_creation(response)
+        end
+
+        it "creates a survivor with minimum allowed longitude" do
+          post :create, params: { survivor: survivor, longitude: -180, latitude: latitude}
+
+          validate_successful_creation(response)
+        end
+
+        it "creates a survivor with maximum allowed longitude" do
+          post :create, params: { survivor: survivor, longitude: 180, latitude: latitude}
+
+          validate_successful_creation(response)
+        end
       end
     end
 
-    context "with invalid attributes" do
-      it "does not create a survivor without a name" do
-        post :create, params: { survivor: survivor.merge(name: nil), longitude: longitude, latitude: latitude }
-
-        validade_unsuccessful_creation(response)
+    context "using invalid attributes" do
+      context "for name" do
+        it "without a name" do
+          post :create, params: { survivor: survivor.merge(name: nil), longitude: longitude, latitude: latitude }
+  
+          validate_unsuccessful_creation(response)
+        end
       end
 
-      it "does not create a survivor without a age" do
-        post :create, params: { survivor: survivor.merge(age: nil), longitude: longitude, latitude: latitude }
+      context "for age" do
+        it "without a value" do
+          post :create, params: { survivor: survivor.merge(age: nil), longitude: longitude, latitude: latitude }
+  
+          validate_unsuccessful_creation(response)
+        end
+  
+        it "when value is below minimum" do
+          post :create, params: { survivor: survivor.merge(age: 14), longitude: longitude, latitude: latitude }
+  
+          validate_unsuccessful_creation(response)
+        end
 
-        validade_unsuccessful_creation(response)
+        it "when value is above maximum" do
+          post :create, params: { survivor: survivor.merge(age:121), longitude: longitude, latitude: latitude }
+
+          validate_unsuccessful_creation(response)
+        end
       end
 
-      it "does not create a survivor with an invalid age" do
-        post :create, params: { survivor: survivor.merge(age: 121), longitude: longitude, latitude: latitude }
+      context "for location" do
+        it "when latitude is below minimum" do
+          post :create, params: { survivor: survivor, longitude: longitude, latitude: -91 }
 
-        validade_unsuccessful_creation(response)
-      end
+          validate_unsuccessful_creation(response)
+        end
 
-      it "does not create a survivor with an invalid longitude" do
-        post :create, params: { survivor: survivor, longitude: longitude, latitude: 91 }
+        it "when latitude is above maximum" do
+          post :create, params: { survivor: survivor, longitude: longitude, latitude: 91 }
 
-        validade_unsuccessful_creation(response)
-      end
+          validate_unsuccessful_creation(response)
+        end
 
-      it "does not create a survivor with an invalid latitude" do
-        post :create, params: { survivor: survivor, longitude: 181, latitude: latitude }
+        it "when longitude is below minimum" do
+          post :create, params: { survivor: survivor, longitude: -181, latitude: latitude }
 
-        validade_unsuccessful_creation(response)
+          validate_unsuccessful_creation(response)
+        end
+
+        it "when longitude is above maximum" do
+          post :create, params: { survivor: survivor, longitude: 181, latitude: latitude }
+
+          validate_unsuccessful_creation(response)
+        end
       end
     end
   end
 
-  def validade_successful_creation(response)
+  describe 'PUT #update' do
+    # TODO: Implement this later
+  end
+
+  def validate_successful_creation(response)
     expect(response).to have_http_status(201)
     expect(Survivor.count).to eq(1)
   end
   
-  def validade_unsuccessful_creation(response)
+  def validate_unsuccessful_creation(response)
     expect(response).to have_http_status(422)
     expect(Survivor.count).to eq(0)
   end
