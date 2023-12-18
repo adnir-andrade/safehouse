@@ -148,6 +148,16 @@ RSpec.describe SurvivorsController, type: :controller do
         expect(standard_survivor.reload.name).to eq("Kenny")
       end
     end
+
+    context "with invalid params" do
+      it "won't update with empty name" do
+        original_name = standard_survivor.name
+        put :update, params: { id: standard_survivor.id, survivor: { name: nil }}
+
+        validate_unsuccessful_creation(response)
+        expect(standard_survivor.reload.name).to eq(original_name)
+      end
+    end
   end
 
   def validate_success(response, status)
