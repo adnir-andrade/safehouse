@@ -154,7 +154,7 @@ RSpec.describe SurvivorsController, type: :controller do
         original_name = standard_survivor.name
         put :update, params: { id: standard_survivor.id, survivor: { name: nil }}
 
-        validate_unsuccessful_creation(response)
+        validate_success(response, 422)
         expect(standard_survivor.reload.name).to eq(original_name)
       end
     end

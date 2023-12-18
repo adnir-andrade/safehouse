@@ -26,10 +26,12 @@ class SurvivorsController < ApplicationController
   end
   
   def update
-    if @survivor.update(survivor_params)
-      render json: @survivor
+    form = Survivors::UpdateForm.new(survivor_params.merge(survivor: @survivor))
+
+    if form.update
+      render json: form
     else
-      render json: @survivor.errors, status: :unprocessable_entity
+      render json: form.errors, status: :unprocessable_entity
     end
   end
   
@@ -63,6 +65,7 @@ class SurvivorsController < ApplicationController
     }
   end
   
+  # Add is_alive as attribute to properly deal with UPDATE methods -.-
   def base_survivor_attributes
     [:name, :gender, :age]
   end
