@@ -5,6 +5,7 @@ RSpec.describe SurvivorsController, type: :controller do
   let(:location) { attributes_for(:location) }
   let(:longitude) { location[:longitude] }
   let(:latitude) { location[:latitude] }
+  let(:standard_survivor) { create(:survivor) }
 
   describe 'GET #index' do
     it 'returns all survivors' do
@@ -37,20 +38,20 @@ RSpec.describe SurvivorsController, type: :controller do
       it "creates a survivor" do
         post :create, params: { survivor: survivor, longitude: longitude, latitude: latitude }
 
-        validate_successful_creation(response)
+        validate_success(response, 201)
       end
 
       context "for age" do
         it "creates a survivor with minimum valid age" do
           post :create, params: { survivor: survivor.merge(age: 15), longitude: longitude, latitude: latitude }
   
-          validate_successful_creation(response)
+          validate_success(response, 201)
         end
   
         it "creates a survivor with maximum valid age" do
           post :create, params: { survivor: survivor.merge(age: 90), longitude: longitude, latitude: latitude }
   
-          validate_successful_creation(response)
+          validate_success(response, 201)
         end
       end
 
@@ -58,25 +59,25 @@ RSpec.describe SurvivorsController, type: :controller do
         it "creates a survivor with minimum allowed latitude" do
           post :create, params: { survivor: survivor, longitude: longitude, latitude: -90}
 
-          validate_successful_creation(response)
+          validate_success(response, 201)
         end
 
         it "creates a survivor with maximum allowed latitude" do
           post :create, params: { survivor: survivor, longitude: longitude, latitude: 90}
 
-          validate_successful_creation(response)
+          validate_success(response, 201)
         end
 
         it "creates a survivor with minimum allowed longitude" do
           post :create, params: { survivor: survivor, longitude: -180, latitude: latitude}
 
-          validate_successful_creation(response)
+          validate_success(response, 201)
         end
 
         it "creates a survivor with maximum allowed longitude" do
           post :create, params: { survivor: survivor, longitude: 180, latitude: latitude}
 
-          validate_successful_creation(response)
+          validate_success(response, 201)
         end
       end
     end
@@ -139,11 +140,18 @@ RSpec.describe SurvivorsController, type: :controller do
   end
 
   describe 'PUT #update' do
-    # TODO: Implement this later
+    context "with valid params" do
+      it "update survivor with valid name" do
+        put :update, params: { id: standard_survivor.id, survivor: { name: "Kenny"} }
+
+        validate_success(response, 200)
+        expect(standard_survivor.reload.name).to eq("Kenny")
+      end
+    end
   end
 
-  def validate_successful_creation(response)
-    expect(response).to have_http_status(201)
+  def validate_success(response, status)
+    expect(response).to have_http_status(status)
     expect(Survivor.count).to eq(1)
   end
   
