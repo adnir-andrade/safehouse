@@ -4,7 +4,7 @@ class Survivors::CreateForm
   attr_accessor :name, :gender, :age, :longitude, :latitude, :survivor
 
   validates :name, presence: true
-  validates :age, presence: true
+  validates :age, presence: true, numericality: { greater_than_or_equal_to: 15, less_than_or_equal_to: 90 }
   validates :gender, presence: true
   validates :longitude, presence: true
   validates :latitude, presence: true
