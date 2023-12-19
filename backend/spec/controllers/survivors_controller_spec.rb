@@ -150,12 +150,28 @@ RSpec.describe SurvivorsController, type: :controller do
     end
 
     context "with invalid params" do
-      it "won't update with empty name" do
+      it "won't update when name is nil" do
         original_name = standard_survivor.name
         put :update, params: { id: standard_survivor.id, survivor: { name: nil }}
 
         validate_success(response, 422)
         expect(standard_survivor.reload.name).to eq(original_name)
+      end
+
+      it "won't update when name is empty" do
+        original_name = standard_survivor.name
+        put :update, params: { id: standard_survivor.id, survivor: { name: "" }}
+
+        validate_success(response, 422)
+        expect(standard_survivor.reload.name).to eq(original_name)
+      end
+
+      it "won't update when age is nil" do
+        original_age = standard_survivor.age
+        put :update, params: { id: standard_survivor.id, survivor: { age: nil} }
+
+        validate_success(response, 422)
+        expect(standard_survivor.reload.age).to eq(original_age)
       end
     end
   end

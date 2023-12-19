@@ -1,7 +1,10 @@
 class Survivors::UpdateForm
   include ActiveModel::Model
 
-  attr_accessor :name, :gender, :age, :is_alive, :survivor
+  ATTRIBUTES = [:name, :gender, :age, :is_alive] 
+  attr_accessor *ATTRIBUTES, :survivor
+
+  # validates :age, numericality: { greater_than_or_equal_to: 15, less_than_or_equal_to: 90 }
 
   validate :has_content?
 
@@ -20,8 +23,13 @@ class Survivors::UpdateForm
   end
 
   def has_content?
-    return if !name.empty?
+    ATTRIBUTES.each do |attribute|
+      value = send(attribute)
+      if value
+        return if !value.empty?
 
-    errors.add(:base, 'Name cannot be empty')
+        errors.add(:base, "#{attribute} cannot be empty")
+      end
+    end
   end
 end
