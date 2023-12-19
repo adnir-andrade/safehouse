@@ -5,6 +5,7 @@ RSpec.describe SurvivorsController, type: :controller do
   let(:location) { attributes_for(:location) }
   let(:longitude) { location[:longitude] }
   let(:latitude) { location[:latitude] }
+  # TODO: Refactor. This won't work if I try to keep testing it. I need to re-create it at every test. 
   let(:standard_survivor) { create(:survivor) }
 
   describe 'GET #index' do
@@ -147,6 +148,13 @@ RSpec.describe SurvivorsController, type: :controller do
         validate_success(response, 200)
         expect(standard_survivor.reload.name).to eq("Kenny")
       end
+
+      it "update survivor with valid age" do
+        put :update, params: { id: standard_survivor.id, survivor: { age: 31}}
+
+        validate_success(response, 200)
+        expect(standard_survivor.reload.age).to eq(31)
+      end
     end
 
     context "with invalid params" do
@@ -164,6 +172,14 @@ RSpec.describe SurvivorsController, type: :controller do
 
         validate_success(response, 422)
         expect(standard_survivor.reload.age).to eq(original_age)
+      end
+
+      it "won't update when gender is nil or empty" do
+        original_gender = standard_survivor.gender
+        put :update, params: { id: standard_survivor.id, survivor: { gender: nil} }
+
+        validate_success(response, 422)
+        expect(standard_survivor.reload.gender).to eq(original_gender)
       end
     end
   end
