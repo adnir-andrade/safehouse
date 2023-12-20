@@ -2,7 +2,7 @@ class LocationSerializer < ActiveModel::Serializer
 
   attributes :id, :longitude, :latitude, :created_at, :updated_at
 
-  belongs_to :survivor_model, serializer: SurvivorSerializer
+  belongs_to :survivor, serializer: SurvivorSerializer
 
   def longitude
     sprintf('%.7f', object.longitude)
