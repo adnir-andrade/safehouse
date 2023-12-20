@@ -149,10 +149,25 @@ RSpec.describe SurvivorsController, type: :controller do
       end
 
       it "update survivor with valid age" do
-        put :update, params: { id: standard_survivor.id, survivor: { age: 31}}
+        put :update, params: { id: standard_survivor.id, survivor: { age: 31} }
 
         validate_success(response, 200, 1)
         expect(standard_survivor.reload.age).to eq(31)
+      end
+
+      it "update survivor with valid gender (oh god I will be cancelled)" do
+        #TODO: Later on, refactor gender to enum and make sure to update this test
+        put :update, params: { id: standard_survivor.id, survivor: { gender: "Something"} }
+      
+        validate_success(response, 200, 1)
+        expect(standard_survivor.reload.gender).to eq("Something")
+      end
+
+      it "update survivor with valid is_alive value" do
+        put :update, params: { id: standard_survivor.id, survivor: { is_alive: false } }
+
+        validate_success(response, 200, 1)
+        expect(standard_survivor.reload.is_alive).to eq(false)
       end
     end
 
