@@ -38,20 +38,20 @@ RSpec.describe SurvivorsController, type: :controller do
       it "creates a survivor" do
         post :create, params: { survivor: survivor, longitude: longitude, latitude: latitude }
 
-        validate_success(response, 201)
+        validate_success(response, 201, 1)
       end
 
       context "for age" do
         it "creates a survivor with minimum valid age" do
           post :create, params: { survivor: survivor.merge(age: 15), longitude: longitude, latitude: latitude }
   
-          validate_success(response, 201)
+          validate_success(response, 201, 1)
         end
   
         it "creates a survivor with maximum valid age" do
           post :create, params: { survivor: survivor.merge(age: 90), longitude: longitude, latitude: latitude }
   
-          validate_success(response, 201)
+          validate_success(response, 201, 1)
         end
       end
 
@@ -59,25 +59,25 @@ RSpec.describe SurvivorsController, type: :controller do
         it "creates a survivor with minimum allowed latitude" do
           post :create, params: { survivor: survivor, longitude: longitude, latitude: -90}
 
-          validate_success(response, 201)
+          validate_success(response, 201, 1)
         end
 
         it "creates a survivor with maximum allowed latitude" do
           post :create, params: { survivor: survivor, longitude: longitude, latitude: 90}
 
-          validate_success(response, 201)
+          validate_success(response, 201, 1)
         end
 
         it "creates a survivor with minimum allowed longitude" do
           post :create, params: { survivor: survivor, longitude: -180, latitude: latitude}
 
-          validate_success(response, 201)
+          validate_success(response, 201, 1)
         end
 
         it "creates a survivor with maximum allowed longitude" do
           post :create, params: { survivor: survivor, longitude: 180, latitude: latitude}
 
-          validate_success(response, 201)
+          validate_success(response, 201, 1)
         end
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe SurvivorsController, type: :controller do
         it "without a name" do
           post :create, params: { survivor: survivor.merge(name: nil), longitude: longitude, latitude: latitude }
   
-          validate_unsuccessful_creation(response)
+          validate_success(response, 422)
         end
       end
 
@@ -95,19 +95,19 @@ RSpec.describe SurvivorsController, type: :controller do
         it "without a value" do
           post :create, params: { survivor: survivor.merge(age: nil), longitude: longitude, latitude: latitude }
   
-          validate_unsuccessful_creation(response)
+          validate_success(response, 422)
         end
   
         it "when value is below minimum" do
           post :create, params: { survivor: survivor.merge(age: 14), longitude: longitude, latitude: latitude }
   
-          validate_unsuccessful_creation(response)
+          validate_success(response, 422)
         end
 
         it "when value is above maximum" do
-          post :create, params: { survivor: survivor.merge(age:121), longitude: longitude, latitude: latitude }
+          post :create, params: { survivor: survivor.merge(age:91), longitude: longitude, latitude: latitude }
 
-          validate_unsuccessful_creation(response)
+          validate_success(response, 422)
         end
       end
 
@@ -115,25 +115,25 @@ RSpec.describe SurvivorsController, type: :controller do
         it "when latitude is below minimum" do
           post :create, params: { survivor: survivor, longitude: longitude, latitude: -91 }
 
-          validate_unsuccessful_creation(response)
+          validate_success(response, 422)
         end
 
         it "when latitude is above maximum" do
           post :create, params: { survivor: survivor, longitude: longitude, latitude: 91 }
 
-          validate_unsuccessful_creation(response)
+          validate_success(response, 422)
         end
 
         it "when longitude is below minimum" do
           post :create, params: { survivor: survivor, longitude: -181, latitude: latitude }
 
-          validate_unsuccessful_creation(response)
+          validate_success(response, 422)
         end
 
         it "when longitude is above maximum" do
           post :create, params: { survivor: survivor, longitude: 181, latitude: latitude }
 
-          validate_unsuccessful_creation(response)
+          validate_success(response, 422)
         end
       end
     end
@@ -144,38 +144,78 @@ RSpec.describe SurvivorsController, type: :controller do
       it "update survivor with valid name" do
         put :update, params: { id: standard_survivor.id, survivor: { name: "Kenny"} }
 
-        validate_success(response, 200)
+        validate_success(response, 200, 1)
         expect(standard_survivor.reload.name).to eq("Kenny")
+      end
+
+      it "update survivor with valid age" do
+        put :update, params: { id: standard_survivor.id, survivor: { age: 31} }
+
+        validate_success(response, 200, 1)
+        expect(standard_survivor.reload.age).to eq(31)
+      end
+
+      it "update survivor with valid gender (oh god I will be cancelled)" do
+        #TODO: Later on, refactor gender to enum and make sure to update this test
+        put :update, params: { id: standard_survivor.id, survivor: { gender: "Something"} }
+      
+        validate_success(response, 200, 1)
+        expect(standard_survivor.reload.gender).to eq("Something")
+      end
+
+      it "update survivor with valid is_alive value" do
+        put :update, params: { id: standard_survivor.id, survivor: { is_alive: false } }
+
+        validate_success(response, 200, 1)
+        expect(standard_survivor.reload.is_alive).to eq(false)
       end
     end
 
     context "with invalid params" do
       it "won't update when name is nil or empty" do
-        original_name = standard_survivor.name
+        original_name = standard_survivor.reload.name
         put :update, params: { id: standard_survivor.id, survivor: { name: nil }}
 
-        validate_success(response, 422)
+        validate_success(response, 422, 1)
         expect(standard_survivor.reload.name).to eq(original_name)
       end
 
       it "won't update when age is nil or empty" do
-        original_age = standard_survivor.age
+        original_age = standard_survivor.reload.age
         put :update, params: { id: standard_survivor.id, survivor: { age: nil} }
 
-        validate_success(response, 422)
+        validate_success(response, 422, 1)
         expect(standard_survivor.reload.age).to eq(original_age)
+      end
+
+      it "won't update when age when out of range (min value)" do
+        original_age = standard_survivor.reload.age
+        put :update, params: { id: standard_survivor.id, survivor: { age: 14}}
+
+        validate_success(response, 422, 1)
+        expect(standard_survivor.reload.age).to eq(original_age)
+      end
+
+      it "won't update when age when out of range (max value)" do
+        original_age = standard_survivor.reload.age
+        put :update, params: { id: standard_survivor.id, survivor: { age: 91}}
+
+        validate_success(response, 422, 1)
+        expect(standard_survivor.reload.age).to eq(original_age)
+      end
+
+      it "won't update when gender is nil or empty" do
+        original_gender = standard_survivor.gender
+        put :update, params: { id: standard_survivor.id, survivor: { gender: nil} }
+
+        validate_success(response, 422, 1)
+        expect(standard_survivor.reload.gender).to eq(original_gender)
       end
     end
   end
 
-  def validate_success(response, status)
+  def validate_success(response, status, survivors_in_db = 0)
     expect(response).to have_http_status(status)
-    expect(Survivor.count).to eq(1)
+    expect(Survivor.count).to eq(survivors_in_db)
   end
-  
-  def validate_unsuccessful_creation(response)
-    expect(response).to have_http_status(422)
-    expect(Survivor.count).to eq(0)
-  end
-  
 end
