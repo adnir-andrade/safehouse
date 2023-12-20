@@ -1,7 +1,7 @@
 class Survivors::CreateForm
   include ActiveModel::Model
 
-  attr_accessor :name, :gender, :age, :longitude, :latitude, :survivor
+  attr_accessor :name, :gender, :age, :is_alive, :longitude, :latitude, :survivor
 
   validates :name, presence: true
   validates :age, presence: true, numericality: { greater_than_or_equal_to: 15, less_than_or_equal_to: 90 }
