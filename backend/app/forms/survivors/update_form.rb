@@ -5,9 +5,8 @@ class Survivors::UpdateForm
   VALUES_TO_UPDATE = {}
   attr_accessor *ATTRIBUTES, :survivor
 
-  # validates :age, numericality: { greater_than_or_equal_to: 15, less_than_or_equal_to: 90 }
-
   validate :has_content?
+  validate :age_within_range?
 
   def update
     return false if invalid?
@@ -32,6 +31,15 @@ class Survivors::UpdateForm
 
         errors.add(:base, "#{attribute} cannot be empty")
       end
+    end
+  end
+
+  def age_within_range?
+    if VALUES_TO_UPDATE[:age]
+      age = VALUES_TO_UPDATE[:age].to_i
+      return if age >= 15 && age <=90
+
+      errors.add(:base, "Age must be a value between 15 and 90!")
     end
   end
 end
