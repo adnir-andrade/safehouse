@@ -13,7 +13,7 @@ RSpec.describe SurvivorsController, type: :controller do
 
       get :index, format: :json
 
-      expect(response).to have_http_status(200)
+      validate_success(response, 200, 10)
       expect(JSON.parse(response.body, {
         symbolize_names: true,
       })[:survivors]).to eq(
