@@ -24,6 +24,25 @@ RSpec.describe LocationsController, type: :controller do
       validate_success(response, 200, 5)
       expect(responseJSON).to eq(expectedJSON)
     end
+
+    it 'returns a single location from a survivor' do
+      location = create(:location, survivor: survivor)
+
+      get :show, params: { survivor_id: survivor.id, id: location.id }, format: :json
+
+      responseJSON = JSON.parse(response.body, { symbolize_names: true })
+      expectedJSON = {
+        id: location.id,
+        latitude: sprintf('%.7f', location.latitude),
+        longitude: sprintf('%.7f', location.longitude),
+        survivor: { id: location.survivor.id, name: location.survivor.name },
+        created_at: location.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        updated_at: location.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+      }
+      
+      validate_success(response, 200, 1)
+      expect(responseJSON).to eq(expectedJSON)
+    end
   end
 
   def validate_success(response, status, locations_in_db = 0)
