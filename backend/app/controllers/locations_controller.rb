@@ -10,7 +10,6 @@ class LocationsController < ApplicationController
 
   def create
     @location = @survivor.locations.build(location_params)
-    # binding.pry
     if @location.save
       render json: @location, status: :created
     else

@@ -1,5 +1,6 @@
 class LocationSerializer < ActiveModel::Serializer
 
+  #TODO: In the future, maybe it would be a good idea to NOT show the survivor's info - It will probably be more efficient.
   attributes :id, :longitude, :latitude, :created_at, :updated_at, :survivor
 
   def longitude
