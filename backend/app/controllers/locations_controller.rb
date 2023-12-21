@@ -9,11 +9,12 @@ class LocationsController < ApplicationController
   end
 
   def create
-    @location = @survivor.locations.build(location_params)
-    if @location.save
-      render json: @location, status: :created
+    form = Locations::CreateForm.new(location_params)
+
+    if form.create
+      render json: form, status: :created
     else
-      render json: { error: "Error trying to Create a Location", details: @location.errors, params: location_params }, status: :unprocessable_entity
+      render json: { error: "Error trying to Create a Location", details: form.errors, params: location_params }, status: :unprocessable_entity
     end
   end
   
@@ -44,6 +45,6 @@ class LocationsController < ApplicationController
   end
 
   def location_params
-    params.require(:location).permit(:latitude, :longitude, :survivor_id)
+    params.require(:location).permit(:latitude, :longitude).merge(survivor_id: params[:survivor_id])
   end
 end
