@@ -31,6 +31,8 @@ RSpec.describe SurvivorsController, type: :controller do
          } }
       )
     end
+
+    #TODO: Add SHOW test here
   end
 
   describe 'POST #create' do
