@@ -39,6 +39,35 @@ RSpec.describe LocationsController, type: :controller do
 
         validate_success(response, 201, 1)
       end
+
+      context "for latitude" do
+        it "creates a location with minimum valid latitude" do
+          post :create, params: { location: location.merge(latitude: -90), survivor_id: survivor.id }
+
+          validate_success(response, 201, 1)
+        end
+        
+        it "creates a location with maximum valid latitude" do
+          post :create, params: { location: location.merge(latitude: 90), survivor_id: survivor.id }
+
+          validate_success(response, 201, 1)
+        end
+      end
+
+      context "for longitude" do
+        it "creates a location with minimum valid longitude" do
+          post :create, params: { location: location.merge(longitude: -180), survivor_id: survivor.id }
+
+          validate_success(response, 201, 1)
+        end
+        
+        it "creates a location with maximum valid longitude" do
+          post :create, params: { location: location.merge(longitude: 180), survivor_id: survivor.id }
+
+          validate_success(response, 201, 1)
+        end
+      end
+    end
     end
   end
 
