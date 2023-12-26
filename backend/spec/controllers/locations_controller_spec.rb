@@ -116,6 +116,22 @@ RSpec.describe LocationsController, type: :controller do
     end
   end
 
+  describe 'PUT #update' do
+    context "with valid params" do
+      it "updates location with valid latitude" do
+        put :update, params: { id: standard_location.id, survivor_id: standard_location.survivor_id, location: { latitude: 54.2321 } }
+
+        validate_success(response, 200, 1)
+        expect(standard_location.reload.latitude).to eq(54.2321)
+      end
+
+      it "updates location with valid longitude" do
+        put :update, params: { id: standard_location.id, survivor_id: standard_location.survivor_id, location: { longitude: 174.12345 } }
+
+        validate_success(response, 200, 1)
+        expect(standard_location.reload.longitude).to eq(174.12345)
+      end
+    end
   def validate_success(response, status, locations_in_db = 0)
     expect(response).to have_http_status(status)
     expect(Location.count).to eq(locations_in_db)
