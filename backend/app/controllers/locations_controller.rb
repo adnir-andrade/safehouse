@@ -9,7 +9,7 @@ class LocationsController < ApplicationController
   end
 
   def create
-    form = Locations::CreateForm.new(location_params)
+    form = Locations::CreateForm.new(location_params.merge(survivor: @survivor))
 
     if form.create
       render json: form, status: :created
@@ -47,6 +47,6 @@ class LocationsController < ApplicationController
   end
 
   def location_params
-    params.require(:location).permit(:latitude, :longitude).merge(survivor_id: params[:survivor_id])
+    params.require(:location).permit(:latitude, :longitude)
   end
 end

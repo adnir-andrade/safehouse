@@ -1,7 +1,7 @@
 class Locations::UpdateForm
   include ActiveModel::Model
 
-  ATTRIBUTES = [:latitude, :longitude, :survivor_id]
+  ATTRIBUTES = [:latitude, :longitude]
   VALUES_TO_UPDATE = {}
   attr_accessor *ATTRIBUTES, :location
 

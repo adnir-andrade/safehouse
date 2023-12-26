@@ -1,11 +1,11 @@
 class Locations::CreateForm
   include ActiveModel::Model
 
-  attr_accessor :latitude, :longitude, :survivor_id
+  attr_accessor :latitude, :longitude, :survivor
 
   validates :latitude, presence: true
   validates :longitude, presence: true
-  validates :survivor_id, presence: true
+  validates :survivor, presence: true
 
   validate :valid_location?
 
@@ -18,7 +18,6 @@ class Locations::CreateForm
   private
 
   def create_location
-    survivor = Survivor.find(survivor_id)
     location = survivor.locations.build(latitude: latitude, longitude: longitude)
     location.save
     
