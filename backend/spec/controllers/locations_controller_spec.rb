@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe LocationsController, type: :controller do
   let(:survivor) { create(:survivor) }
   let(:location) { attributes_for(:location) }
+  let(:standard_location) { create(:location) }
 
   describe 'GET #index' do
     it 'returns all locations from a survivor' do
@@ -132,6 +133,53 @@ RSpec.describe LocationsController, type: :controller do
         expect(standard_location.reload.longitude).to eq(174.12345)
       end
     end
+
+    context "with invalid params" do
+      context "for latitude" do
+        it "doesn't update location when latitude is below minimum value" do
+          original_location = standard_location
+          put :update, params: { id: standard_location.id, survivor_id: standard_location.survivor_id, location: { latitude: -90.1 } }
+
+          validate_success(response, 422, 1)
+          expect(standard_location.reload.latitude).to eq(original_location.latitude)
+        end
+
+        it "doesn't update location when latitude is above maximum value" do
+          original_location = standard_location
+          put :update, params: { id: standard_location.id, survivor_id: standard_location.survivor_id, location: { latitude: 90.1 } }
+
+          validate_success(response, 422, 1)
+          expect(standard_location.reload.latitude).to eq(original_location.latitude)
+        end
+      end
+
+      context "for longitude" do
+        it "doesn't update location when longitude is below minimum value" do
+          original_location = standard_location
+          put :update, params: { id: standard_location.id, survivor_id: standard_location.survivor_id, location: { longitude: -180.1 } }
+
+          validate_success(response, 422, 1)
+          expect(standard_location.reload.longitude).to eq(original_location.longitude)
+        end
+
+        it "doesn't update location when longitude is above maximum value" do
+          original_location = standard_location
+          put :update, params: { id: standard_location.id, survivor_id: standard_location.survivor_id, location: { longitude: 180.1 } }
+
+          validate_success(response, 422, 1)
+          expect(standard_location.reload.longitude).to eq(original_location.longitude)
+        end
+      end
+    end
+
+    it "doesn't update survivor_id" do
+      original_survivor_id = standard_location.survivor_id
+      put :update, params: { id: standard_location.id, survivor_id: original_survivor_id, location: { survivor_id: 777 } }
+
+      expect(standard_location.reload.survivor_id).to eq(original_survivor_id)
+    end
+  end
+
   def validate_success(response, status, locations_in_db = 0)
     expect(response).to have_http_status(status)
     expect(Location.count).to eq(locations_in_db)
