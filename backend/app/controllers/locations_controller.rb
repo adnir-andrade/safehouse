@@ -23,10 +23,12 @@ class LocationsController < ApplicationController
   end
 
   def update
-    if @location.update(location_params)
-      render json: @location
+    form = Locations::UpdateForm.new(location_params.merge(location: @location))
+
+    if form.update
+      render json: form
     else
-      render json: { error: "Error trying to update a Location", details: @location.errors, params: location_params }, status: :unprocessable_entity
+      render json: form.errors, status: :unprocessable_entity
     end
   end
 
