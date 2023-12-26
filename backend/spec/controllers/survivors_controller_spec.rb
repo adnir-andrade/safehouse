@@ -13,26 +13,26 @@ RSpec.describe SurvivorsController, type: :controller do
 
       get :index, format: :json
 
+      responseJSON = JSON.parse(response.body, { symbolize_names: true })
+      expectedJSON = Survivor.all.map { |e| 
+        formatJSON(e)
+      }
+
       validate_success(response, 200, 10)
-      expect(JSON.parse(response.body, {
-        symbolize_names: true,
-      })[:survivors]).to eq(
-        Survivor.all.map { |e| { 
-          id: e.id, 
-          name: e.name, 
-          gender: e.gender, 
-          age: e.age, 
-          is_alive: "Alive",
-          locations: [], 
-          created_at: e.created_at.strftime('%Y-%m-%d'),
-          updated_at: e.updated_at.strftime('%Y-%m-%d'),
-          inventory_id: e.inventory_id,
-          location_id: e.location_id
-         } }
-      )
+      expect(responseJSON[:survivors]).to eq(expectedJSON)
     end
 
-    #TODO: Add SHOW test here
+    it 'returns a single survivor' do
+      survivor = create(:survivor)
+
+      get :show, params: { id: survivor.id }, format: :json
+
+      responseJSON = JSON.parse(response.body, { symbolize_names: true })
+      expectedJSON = formatJSON(survivor)
+      
+      validate_success(response, 200, 1)
+      expect(responseJSON).to eq(expectedJSON)
+    end
   end
 
   describe 'POST #create' do
@@ -220,5 +220,20 @@ RSpec.describe SurvivorsController, type: :controller do
   def validate_success(response, status, survivors_in_db = 0)
     expect(response).to have_http_status(status)
     expect(Survivor.count).to eq(survivors_in_db)
+  end
+
+  def formatJSON(survivor)
+    return formattedJson = { 
+      id: survivor.id, 
+      name: survivor.name, 
+      gender: survivor.gender, 
+      age: survivor.age, 
+      is_alive: "Alive",
+      locations: [], 
+      created_at: survivor.created_at.strftime('%Y-%m-%d'),
+      updated_at: survivor.updated_at.strftime('%Y-%m-%d'),
+      inventory_id: survivor.inventory_id,
+      location_id: survivor.location_id
+     }
   end
 end
