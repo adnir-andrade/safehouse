@@ -68,6 +68,51 @@ RSpec.describe LocationsController, type: :controller do
         end
       end
     end
+
+    context "using invalid attributes" do
+      it "doesn't create a location without a survivor ID" do
+        expect {
+          post :create, params: { location: location, survivor_id: nil }
+        }.to raise_error(ActionController::UrlGenerationError)
+      end
+
+      context "for latitude" do
+        it "doesn't create a location when latitude is below minimum" do
+          post :create, params: { location: location.merge(latitude: -90.1), survivor_id: survivor.id }
+
+          validate_success(response, 422)
+        end
+
+        it "doesn't create a location when latitude is above maximum" do
+          post :create, params: { location: location.merge(latitude: 90.1), survivor_id: survivor.id }
+
+          validate_success(response, 422)
+        end
+
+        it "doesn't create a location when latitude is nil" do
+          post :create, params: { location: location.merge(latitude: nil), survivor_id: survivor.id }
+
+          validate_success(response, 422)
+        end
+
+        it "doesn't create a location when longitude is below minimum" do
+          post :create, params: { location: location.merge(longitude: -180.1), survivor_id: survivor.id }
+
+          validate_success(response, 422)
+        end
+
+        it "doesn't create a location when longitude is above maximum" do
+          post :create, params: { location: location.merge(latitude: 180.1), survivor_id: survivor.id }
+
+          validate_success(response, 422)
+        end
+
+        it "doesn't create a location when longitude is nil" do
+          post :create, params: { location: location.merge(longitude: nil), survivor_id: survivor.id }
+
+          validate_success(response, 422)
+        end
+      end
     end
   end
 
