@@ -3,46 +3,50 @@ class LocationsController < ApplicationController
   before_action :set_location, only: %i[show update destroy]
 
   def index
-    if params[:survivor_id]
-      @locations = @survivor.locations
-    else
-      @locations = Location.all
-    end
+    @locations = @survivor.locations
 
     render json: @locations
   end
+
   def create
-    @location = @survivor.locations.build(location_params)
-    # binding.pry
-    if @location.save
-      render json: @location, status: :created
+    form = Locations::CreateForm.new(location_params.merge(survivor: @survivor))
+
+    if form.create
+      render json: form, status: :created
     else
-      render json: { error: "Error trying to Create a Location", details: @location.errors, params: location_params }, status: :unprocessable_entity
+      render json: { error: "Error trying to Create a Location", details: form.errors, params: location_params }, status: :unprocessable_entity
     end
   end
   
   def show
     render json: @location
   end
+
   def update
-    if @location.update(location_params)
-      render json: @location
+    form = Locations::UpdateForm.new(location_params.merge(location: @location))
+
+    if form.update
+      render json: form
     else
-      render json: { error: "Error trying to update a Location", details: @location.errors, params: location_params }, status: :unprocessable_entity
+      render json: form.errors, status: :unprocessable_entity
     end
   end
+
   def destroy
     render json: @location.destroy
   end
 
   private
+
   def get_survivor
     @survivor = Survivor.find(params[:survivor_id])
   end
+
   def set_location
     @location = @survivor.locations.find(params[:id])
   end
+
   def location_params
-    params.require(:location).permit(:latitude, :longitude, :survivor_id)
+    params.require(:location).permit(:latitude, :longitude)
   end
 end

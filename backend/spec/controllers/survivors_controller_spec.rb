@@ -13,7 +13,7 @@ RSpec.describe SurvivorsController, type: :controller do
 
       get :index, format: :json
 
-      expect(response).to have_http_status(200)
+      validate_success(response, 200, 10)
       expect(JSON.parse(response.body, {
         symbolize_names: true,
       })[:survivors]).to eq(
@@ -31,6 +31,8 @@ RSpec.describe SurvivorsController, type: :controller do
          } }
       )
     end
+
+    #TODO: Add SHOW test here
   end
 
   describe 'POST #create' do
@@ -55,6 +57,7 @@ RSpec.describe SurvivorsController, type: :controller do
         end
       end
 
+      # TODO: Is this really necessary here? I am testing the same in locations_controller_spec. Check later 
       context "for location" do
         it "creates a survivor with minimum allowed latitude" do
           post :create, params: { survivor: survivor, longitude: longitude, latitude: -90}
