@@ -57,6 +57,7 @@ RSpec.describe SurvivorsController, type: :controller do
         end
       end
 
+      # TODO: Is this really necessary here? I am testing the same in locations_controller_spec. Check later 
       context "for location" do
         it "creates a survivor with minimum allowed latitude" do
           post :create, params: { survivor: survivor, longitude: longitude, latitude: -90}
