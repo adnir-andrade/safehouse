@@ -26,10 +26,12 @@ class ItemsController < ApplicationController
   end
 
   def update
-    if @item.update(item_params)
-      render json: @item
+    form = Items::UpdateForm.new(item_params.merge(item: @item))
+
+    if form.update
+      render json: form
     else
-      render json: @item.errors, status: :unprocessable_entity
+      render json: form.errors, status: :unprocessable_entity
     end
   end
 
