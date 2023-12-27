@@ -4,7 +4,7 @@ class Items::CreateForm
   attr_accessor :name, :value, :description
 
   validates :name, presence: true
-  validates :value, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :value, presence: true, numericality: { greater_than: 0 }
 
   def create
     return false if invalid?
