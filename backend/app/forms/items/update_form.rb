@@ -6,7 +6,7 @@ class Items::UpdateForm
   attr_accessor *ATTRIBUTES, :item
 
   validate :has_content?
-  validate :price_above_zero?
+  validate :value_above_zero?
 
   def update
     return false if invalid?
@@ -34,7 +34,7 @@ class Items::UpdateForm
     end
   end
 
-  def price_above_zero?
+  def value_above_zero?
     if VALUES_TO_UPDATE[:value]
       value = VALUES_TO_UPDATE[:value].to_f
       return if value > 0
