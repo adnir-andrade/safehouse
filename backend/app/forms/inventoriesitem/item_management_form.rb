@@ -11,15 +11,16 @@ class Inventoriesitem::ItemManagementForm
     puts "Trying to add a new item"
     return false if invalid?
 
-    store_item
+    inventory_item = InventoriesItem.find_or_initialize_by(item_id: item_id, inventory_id: inventory_id)
+    store_item(inventory_item)
   end
 
   def remove_quantity
     return false if invalid?
-    
+
     if @inventoryitem.quantity - @quantity > 0
       @quantity *= -1
-      store_item
+      store_item(@inventoryitem)
     else
       errors.add(:quantity, 'Not enough quantity in the inventory to be removed')
       return false
@@ -28,9 +29,7 @@ class Inventoriesitem::ItemManagementForm
 
   private
 
-  def store_item 
-    inventory_item = InventoriesItem.find_or_initialize_by(item_id: item_id, inventory_id: inventory_id)
-
+  def store_item(inventory_item)
     if inventory_item.persisted?
       inventory_item.quantity += quantity
     else
