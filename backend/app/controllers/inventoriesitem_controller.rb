@@ -1,25 +1,11 @@
 class InventoriesitemController < ApplicationController
-  before_Action :set_inventoryitem, only %i[show update destroy]
+  before_action :set_inventoryitem, only: %i[show update destroy]
 
   def index
-    @inventoriesitem = Inventoriesitem.all
-    # TODO: Index should show all items from ID inventory
+    @inventoriesitem = InventoriesItem.all
+    # TODO: Index should show all items from ID inventory. Or make another call to group by id_inventory
 
     render json: @inventoriesitem, adapter: :json
-  end
-
-  def new
-    @inventoryitem = Inventoriesitem.new
-  end
-
-  def create
-    @inventoryitem = Inventoriesitem.new(inventoryitem_params)
-
-    if @inventoryitem.save
-      render json: @inventoryitem, status: :created
-    else
-      render json: { error: 'There was an error trying to CREATE item in inventory', details: @inventoriesitem.errors }, status: :unprocessable_entity
-    end
   end
 
   def show
@@ -38,6 +24,16 @@ class InventoriesitemController < ApplicationController
     render json: @inventoryitem.destroy
   end
 
+  def add_item
+    form = Inventoriesitem::CreateForm.new(inventoryitem_params)
+
+    if form.add_item
+      render json: form, status: :created
+    else
+      render json: { error: 'There was an error trying to ADD AN ITEM to this inventory', details: form.errors }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_inventoryitem
@@ -45,5 +41,6 @@ class InventoriesitemController < ApplicationController
   end
 
   def inventoryitem_params
-    paramas.require(:inventoryitem).permit(:quantity)
+    params.require(:inventoriesitem).permit(:inventory_id, :item_id, :quantity)
   end
+end
