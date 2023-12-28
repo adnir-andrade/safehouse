@@ -1,5 +1,5 @@
 class InventoriesitemController < ApplicationController
-  before_action :set_inventoryitem, only: %i[show update destroy]
+  before_action :set_inventoryitem, only: %i[show update destroy remove_quantity]
 
   def index
     @inventoriesitem = InventoriesItem.all
@@ -27,17 +27,27 @@ class InventoriesitemController < ApplicationController
   def add_item
     form = Inventoriesitem::ItemManagementForm.new(inventoryitem_params)
 
-    if form.add_item
+    if form.add_quantity
       render json: form, status: :created
     else
       render json: { error: 'There was an error trying to ADD AN ITEM to this inventory', details: form.errors }, status: :unprocessable_entity
     end
   end
 
+  def remove_quantity
+    form = Inventoriesitem::ItemManagementForm.new(inventoryitem_params.merge(inventoryitem: @inventoryitem))
+
+    if form.remove_quantity
+      render json: form, status: :created
+    else
+      render json: { error: 'Error trying to remove quantity', details: form.errors }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_inventoryitem
-    @inventoryitem = Inventoryitem.find(params[:id])
+    @inventoryitem = InventoriesItem.find(params[:id])
   end
 
   def inventoryitem_params

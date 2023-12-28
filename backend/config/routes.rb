@@ -12,5 +12,7 @@ Rails.application.routes.draw do
     collection do
       post '/add-item', to: 'inventoriesitem#add_item', as: 'add-item'
     end
+    
+    put '/remove-quantity', on: :member, to: 'inventoriesitem#remove_quantity', as: 'remove-quantity'
   end
 end
