@@ -1,4 +1,4 @@
-class Inventoriesitem::CreateForm
+class Inventoriesitem::ItemManagementForm
   include ActiveModel::Model
 
   attr_accessor :inventory_id, :item_id, :quantity

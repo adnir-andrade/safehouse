@@ -25,7 +25,7 @@ class InventoriesitemController < ApplicationController
   end
 
   def add_item
-    form = Inventoriesitem::CreateForm.new(inventoryitem_params)
+    form = Inventoriesitem::ItemManagementForm.new(inventoryitem_params)
 
     if form.add_item
       render json: form, status: :created
