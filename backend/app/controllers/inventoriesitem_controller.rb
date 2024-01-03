@@ -3,15 +3,14 @@ class InventoriesitemController < ApplicationController
 
   def index
     @inventoriesitem = InventoriesItem.all
-    # TODO: Index should show all items from ID inventory. Or make another call to group by id_inventory
 
-    render json: @inventoriesitem, adapter: :json
+    render json: @inventoriesitem
   end
 
   def inventory_index
     @inventoriesitem = InventoriesItem.where(inventory_id: params[:inventory_id])
 
-    render json: @inventoriesitem, adapter: :json
+    render json: @inventoriesitem
   end
 
   def show
