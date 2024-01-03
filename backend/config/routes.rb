@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   resources :inventoriesitem, only: [:index, :show, :update] do
     collection do
       post '/add-item', to: 'inventoriesitem#add_item', as: 'add-item'
+
+      get '/inventory/:inventory_id', to: 'inventoriesitem#inventory_index', as: 'inventory-index'
     end
     
     put '/remove-quantity', on: :member, to: 'inventoriesitem#remove_quantity', as: 'remove-quantity'

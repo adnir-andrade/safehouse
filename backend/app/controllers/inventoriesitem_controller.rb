@@ -8,6 +8,12 @@ class InventoriesitemController < ApplicationController
     render json: @inventoriesitem, adapter: :json
   end
 
+  def inventory_index
+    @inventoriesitem = InventoriesItem.where(inventory_id: params[:inventory_id])
+
+    render json: @inventoriesitem, adapter: :json
+  end
+
   def show
     render json: @inventoryitem
   end
