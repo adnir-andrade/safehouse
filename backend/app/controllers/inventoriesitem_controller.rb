@@ -4,17 +4,17 @@ class InventoriesitemController < ApplicationController
   def index
     @inventoriesitem = InventoriesItem.all
 
-    render json: @inventoriesitem, each_serializer: InventoryitemSerializer, scope: self
+    render json: @inventoriesitem, each_serializer: InventoryitemSerializer
   end
 
   def inventory_index
     @inventoriesitem = InventoriesItem.where(inventory_id: params[:inventory_id])
 
-    render json: @inventoriesitem, each_serializer: InventoryitemSerializer, scope: self
+    render json: @inventoriesitem, each_serializer: InventoryitemSerializer
   end
 
   def show
-    render json: @inventoryitem
+    render json: @inventoryitem, serializer: InventoryitemSerializer
   end
 
   def update
