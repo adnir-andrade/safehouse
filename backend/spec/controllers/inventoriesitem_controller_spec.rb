@@ -17,7 +17,35 @@ RSpec.describe InventoriesitemController, type: :controller do
 
       validate_success(response, 200, 10)
       expect(responseJSON).to eq(expectedJSON)
-    end  
+    end
+
+    it 'returns a single entry' do
+      inventoryitem = create(:inventoryitem)
+
+      get :show, params: { id: inventoryitem.id }
+
+      responseJSON = JSON.parse(response.body, { symbolize_names: true })
+      expectedJSON = formatJSON(inventoryitem)
+    end
+
+    it 'returns all entries related to a single inventory_id' do
+      create_list(:inventoryitem, 10)
+
+      get :inventory_index, params: { inventory_id: InventoriesItem.first.inventory_id }
+      
+      responseJSON = JSON.parse(response.body, { symbolize_names: true })
+
+      selected_entries = InventoriesItem.all.select { |inventoryitem|
+        inventoryitem.inventory_id == InventoriesItem.first.inventory_id
+      }
+
+      expectedJSON = selected_entries.map { |inventoryitem|
+        formatJSON(inventoryitem)
+      }
+
+      validate_success(response, 200, 10)
+      expect(responseJSON).to eq(expectedJSON)
+    end
   end
 
   def validate_success(response, status, db_entries = 0)
