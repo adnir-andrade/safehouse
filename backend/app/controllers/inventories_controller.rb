@@ -1,5 +1,5 @@
 class InventoriesController < ApplicationController
-  before_action :set_inventory, only: %i[show update add_item]
+  before_action :set_inventory, only: %i[show update]
 
   def show
     render json: @inventory
@@ -13,16 +13,6 @@ class InventoriesController < ApplicationController
     end
   end
 
-  def add_item
-    form = Inventories::CreateForm.new(inventory_params)
-
-    if form.add_item
-      render json: form, status: :created, location: @inventory
-    else
-      render json: { error: 'There was an error trying to ADD AN ITEM to this inventory', details: form.errors }, status: :unprocessable_entity
-    end
-  end
-
   private
   
   def set_inventory
@@ -30,7 +20,6 @@ class InventoriesController < ApplicationController
   end
 
   def inventory_params
-    params.permit(:id, :item_id, :quantity)
+    params.permit(:id)
   end
-
 end

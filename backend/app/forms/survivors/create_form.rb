@@ -26,7 +26,11 @@ class Survivors::CreateForm
     if survivor.persisted?
       location = survivor.locations.build({longitude: longitude, latitude: latitude})
       location.save
-      survivor.update(location_id: location.id)
+
+      inventory = survivor.build_inventory
+      inventory.save 
+
+      survivor.update(location_id: location.id, inventory_id: inventory.id)
     else
       errors.merge!(survivor.errors)
       return false

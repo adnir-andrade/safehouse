@@ -1,29 +1,20 @@
 class InventoriesitemController < ApplicationController
-  before_Action :set_inventoryitem, only %i[show update destroy]
+  before_action :set_inventoryitem, only: %i[show update destroy remove_quantity]
 
   def index
-    @inventoriesitem = Inventoriesitem.all
-    # TODO: Index should show all items from ID inventory
+    @inventoriesitem = InventoriesItem.all
 
-    render json: @inventoriesitem, adapter: :json
+    render json: @inventoriesitem, each_serializer: InventoryitemSerializer
   end
 
-  def new
-    @inventoryitem = Inventoriesitem.new
-  end
+  def inventory_index
+    @inventoriesitem = InventoriesItem.where(inventory_id: params[:inventory_id])
 
-  def create
-    @inventoryitem = Inventoriesitem.new(inventoryitem_params)
-
-    if @inventoryitem.save
-      render json: @inventoryitem, status: :created
-    else
-      render json: { error: 'There was an error trying to CREATE item in inventory', details: @inventoriesitem.errors }, status: :unprocessable_entity
-    end
+    render json: @inventoriesitem, each_serializer: InventoryitemSerializer
   end
 
   def show
-    render json: @inventoryitem
+    render json: @inventoryitem, serializer: InventoryitemSerializer
   end
 
   def update
@@ -38,12 +29,33 @@ class InventoriesitemController < ApplicationController
     render json: @inventoryitem.destroy
   end
 
+  def add_item
+    form = Inventoriesitem::ItemManagementForm.new(inventoryitem_params)
+
+    if form.add_quantity
+      render json: form, status: :created
+    else
+      render json: { error: 'There was an error trying to ADD AN ITEM to this inventory', details: form.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def remove_quantity
+    form = Inventoriesitem::ItemManagementForm.new(inventoryitem_params.merge(inventoryitem: @inventoryitem))
+
+    if form.remove_quantity
+      render json: form, status: :created
+    else
+      render json: { error: 'Error trying to remove quantity', details: form.errors }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_inventoryitem
-    @inventoryitem = Inventoryitem.find(params[:id])
+    @inventoryitem = InventoriesItem.find(params[:id])
   end
 
   def inventoryitem_params
-    paramas.require(:inventoryitem).permit(:quantity)
+    params.require(:inventoriesitem).permit(:inventory_id, :item_id, :quantity)
   end
+end
