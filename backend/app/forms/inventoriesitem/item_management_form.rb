@@ -31,9 +31,9 @@ class Inventoriesitem::ItemManagementForm
 
   def store_item(inventory_item)
     if inventory_item.persisted?
-      inventory_item.quantity += quantity
+      inventory_item.quantity += quantity.to_i
     else
-      inventory_item.quantity = quantity
+      inventory_item.quantity = quantity.to_i
     end
 
     if inventory_item.save

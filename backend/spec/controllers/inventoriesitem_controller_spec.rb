@@ -58,6 +58,17 @@ RSpec.describe InventoriesitemController, type: :controller do
 
         validate_success(response, 201, 1)
       end
+
+      it 'adds quantity to existing entry' do
+        standard_entry = inventoryitem.merge(inventory_id: inventory.id, item_id: item.id)
+        existing_entry = InventoriesItem.create(standard_entry)
+        original_quantity = existing_entry.quantity
+        
+        post :add_item, params: { inventoriesitem: standard_entry }
+        
+        expect(existing_entry.reload.quantity).to eq(original_quantity * 2)        
+        validate_success(response, 201, 1)
+      end
     end
   end
 
