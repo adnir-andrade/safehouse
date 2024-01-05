@@ -52,7 +52,7 @@ RSpec.describe InventoriesitemController, type: :controller do
 
   describe 'POST #add_item' do
     context 'using valid attributes' do
-      it 'adds quantity to the inventory' do
+      it 'adds new entry to the inventory' do
         standard_entry = inventoryitem.merge(inventory_id: inventory.id, item_id: item.id)
         post :add_item, params: { inventoriesitem: standard_entry }
 
