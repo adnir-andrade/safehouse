@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe InventoriesitemController, type: :controller do
   let(:inventory) { create(:inventory) }
   let(:item) { create(:item) }
+  let(:inventoryitem) { attributes_for(:inventoryitem)}
+  let(:standard_entry) { create(:inventoryitem) }
 
   describe 'GET #index' do
     it 'returns all records' do
@@ -45,6 +47,17 @@ RSpec.describe InventoriesitemController, type: :controller do
 
       validate_success(response, 200, 10)
       expect(responseJSON).to eq(expectedJSON)
+    end
+  end
+
+  describe 'POST #add_item' do
+    context 'using valid attributes' do
+      it 'adds quantity to the inventory' do
+        standard_entry = inventoryitem.merge(inventory_id: inventory.id, item_id: item.id)
+        post :add_item, params: { inventoriesitem: standard_entry }
+
+        validate_success(response, 201, 1)
+      end
     end
   end
 
