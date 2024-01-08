@@ -108,6 +108,32 @@ RSpec.describe InventoriesitemController, type: :controller do
         validate_success(response, 200, 1)
       end
     end
+
+    context 'using invalid attributes' do
+      it "doesn't change anything if quantity is empty or nil" do
+        existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
+        put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: nil } }
+        
+        expect(existing_entry.reload.quantity).to eq(10)
+        validate_success(response, 200, 1)
+      end
+
+      it "doesn't change anything if quantity is a string" do
+        existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
+        put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: "five" } }
+        
+        expect(existing_entry.reload.quantity).to eq(10)
+        validate_success(response, 200, 1)
+      end
+
+      it "doesn't change anything if there isn't enough quantity to be decreased" do
+        existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
+        put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: 11 } }
+        
+        expect(existing_entry.reload.quantity).to eq(10)
+        validate_success(response, 422, 1)
+      end
+    end
   end
 
   def validate_success(response, status, db_entries = 0)
