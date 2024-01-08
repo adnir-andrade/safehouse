@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe InventoriesitemController, type: :controller do
   let(:inventory) { create(:inventory) }
   let(:item) { create(:item) }
-  let(:inventoryitem) { attributes_for(:inventoryitem)}
-  let(:standard_entry) { create(:inventoryitem) }
+  let(:inventoryitem) { attributes_for(:inventoryitem) }
+  let(:standard_entry) { attributes_for(:inventoryitem, inventory_id: inventory.id, item_id: item.id) }
 
   describe 'GET #index' do
     it 'returns all records' do
@@ -53,14 +53,12 @@ RSpec.describe InventoriesitemController, type: :controller do
   describe 'POST #add_item' do
     context 'using valid attributes' do
       it 'adds new entry to the inventory' do
-        standard_entry = inventoryitem.merge(inventory_id: inventory.id, item_id: item.id)
         post :add_item, params: { inventoriesitem: standard_entry }
 
         validate_success(response, 201, 1)
       end
 
       it 'adds quantity to existing entry' do
-        standard_entry = inventoryitem.merge(inventory_id: inventory.id, item_id: item.id)
         existing_entry = InventoriesItem.create(standard_entry)
         original_quantity = existing_entry.quantity
         
@@ -68,6 +66,34 @@ RSpec.describe InventoriesitemController, type: :controller do
         
         expect(existing_entry.reload.quantity).to eq(original_quantity * 2)        
         validate_success(response, 201, 1)
+      end
+
+      it 'creates a new entry with minimum quantity' do
+        post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: 1) }
+
+        validate_success(response, 201, 1)
+      end
+    end
+
+    context 'using invalid attributes' do
+      it "doesn't create a new entry when quantity below minimum" do
+        post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: 0) }
+
+        validate_success(response, 422)
+      end
+
+      it "doesn't create a new entry when quantity is nil or empty" do
+        post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: nil) }
+
+        validate_success(response, 422)
+      end
+    end
+  end
+
+  describe 'PUT #remove_quantity' do
+    context 'using valid attributes' do
+      it 'removes quantity from an entry' do
+
       end
     end
   end
