@@ -99,6 +99,14 @@ RSpec.describe InventoriesitemController, type: :controller do
         expect(existing_entry.reload.quantity).to eq(7)        
         validate_success(response, 200, 1)
       end
+
+      it 'removes quantity from an entry passing a negative number' do
+        existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
+        put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: -3 } }
+        
+        expect(existing_entry.reload.quantity).to eq(7)        
+        validate_success(response, 200, 1)
+      end
     end
   end
 
