@@ -43,7 +43,7 @@ class InventoriesitemController < ApplicationController
     form = Inventoriesitem::ItemManagementForm.new(inventoryitem_params.merge(inventoryitem: @inventoryitem))
 
     if form.remove_quantity
-      render json: form, status: :created
+      render json: form, status: :ok
     else
       render json: { error: 'Error trying to remove quantity', details: form.errors }, status: :unprocessable_entity
     end
