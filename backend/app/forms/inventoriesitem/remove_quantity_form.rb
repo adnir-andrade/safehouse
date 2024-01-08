@@ -7,7 +7,7 @@ class Inventoriesitem::RemoveQuantityForm
   validate :has_enough?
 
   def quantity=(value)
-    @quantity = value.to_i
+    @quantity = value.to_i.abs
   end
 
   def remove_quantity
@@ -21,7 +21,6 @@ class Inventoriesitem::RemoveQuantityForm
 
   def update_quantity(inventory_item)
     inventory_item.quantity -= quantity
-
     if inventory_item.save
       return true
     else
@@ -31,7 +30,7 @@ class Inventoriesitem::RemoveQuantityForm
   end
 
   def has_enough?
-    return if @inventoryitem.quantity - @quantity.abs > 0
+    return if @inventoryitem.quantity - @quantity > 0
 
     errors.add(:quantity, 'Not enough quantity in the inventory to be removed')
   end
