@@ -17,4 +17,6 @@ Rails.application.routes.draw do
     
     put '/remove-quantity', on: :member, to: 'inventoriesitem#remove_quantity', as: 'remove-quantity'
   end
+
+  get :reports, to: 'reports#test_report'
 end
