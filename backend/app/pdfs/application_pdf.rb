@@ -3,21 +3,33 @@ class ApplicationPdf
 
   def write_header
     repeat(:all) do
-      bounding_box([0, cursor], width: bounds.width, height: 80) do
-        font_size(25) { draw_text 'Testing Safehouse APP', at: [60, 45] }
-        move_down 10
-        draw_text "Date: #{Date.today.strftime('%d/%m/%Y')}", at: [60, cursor]
+      font_families.update("safehouse-font" => {
+        :normal => Rails.root.join("app/assets/fonts/MontserratSubrayada-Regular.ttf"),
+        :bold => Rails.root.join("app/assets/fonts/MontserratSubrayada-Bold.ttf"),
+      })
+      font "safehouse-font"
+      # Use this font only for the title
+
+      title = 'The Safehouse'
+      date_text = "Date: #{Date.today.strftime('%d/%m/%Y')}"
+
+      bounding_box([0, cursor], width: bounds.width, height: 40) do
+        font_size(17) { draw_text title, at: [15, 45] }
+        
+        top_right = bounds.width - 15 - width_of(date_text)
+        draw_text date_text, at: [top_right, 45]
+
+        stroke_horizontal_rule
       end
     end
   end
 
   def write_title(title)
-    font_size(25) { text title, align: :center, style: :bold }
-    move_down 10
+    font_size(27) { text title, align: :center, style: :bold }
   end
 
   def write_body
-    bounding_box([0, bounds.top - 100], width: bounds.width) do
+    bounding_box([0, bounds.top - 80], width: bounds.width) do
       yield
     end
   end

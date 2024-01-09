@@ -6,9 +6,8 @@ class SurvivorsPdf < ApplicationPdf
   end
 
   def render_document
-    puts "THIS SHOULD BE WORKING"
     write_header
-    write_title('Survivors List')
+    write_title('Survivors')
     write_body do
       write_table(header: ['Name', 'Gender', 'Age'], data: @survivors)
     end
