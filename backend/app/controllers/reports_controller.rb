@@ -14,6 +14,19 @@ class ReportsController < ApplicationController
     end
   end
 
+  def items_report
+    items = Item.pluck(:name, :value, :description)
+    sort_items(items)
+    pdf = ItemsPdf.new(items: items)
+    pdf.render_document
+
+    respond_to do |format|
+      format.pdf do
+        send_data(pdf.render, filename: 'items.pdf', type: 'application/pdf', disposition: 'inline')
+      end
+    end
+  end
+
   def sort_survivors(survivors)
     case @sorter
     when "name-asc"
@@ -26,6 +39,23 @@ class ReportsController < ApplicationController
       survivors.sort_by! { |survivor| survivor[2] }
     when "age-desc"
       survivors.sort_by! { |survivor| survivor[2] }.reverse!
+    else
+      return survivors
+    end
+  end
+
+  def sort_items(items)
+    case @sorter
+    when "name-asc"
+      items.sort_by! { |item| item[0] }
+    when "name-desc"
+      items.sort_by! { |item| item[0] }.reverse!
+    when "value-asc"
+      items.sort_by! { |item| item[1] }
+    when "value-desc"
+      items.sort_by! { |item| item[1] }.reverse!
+    when "description"
+      items.sort_by! { |item| item[2] }
     else
       return survivors
     end
