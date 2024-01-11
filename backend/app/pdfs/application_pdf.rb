@@ -1,13 +1,33 @@
 class ApplicationPdf
   include Prawn::View
 
-  def write_header
+  def initialize
+    update_font_families
+  end
+
+  def update_font_families
+    font_families.update("montserrat" => {
+      :normal => Rails.root.join("app/assets/fonts/MontserratSubrayada-Regular.ttf"),
+      :bold => Rails.root.join("app/assets/fonts/MontserratSubrayada-Bold.ttf")
+    })
+
+    font_families.update("noto" => {
+      :normal => Rails.root.join("app/assets/fonts/NotoSansJP-VariableFont_wght.ttf"),
+      :bold => Rails.root.join("app/assets/fonts/NotoSansJP-VariableFont_wght.ttf")
+    })
+
+    font_families.update("dm-mono" => {
+      :light => Rails.root.join("app/assets/fonts/DMMono-Light.ttf"),
+      :normal => Rails.root.join("app/assets/fonts/DMMono-Regular.ttf"),
+      :bold => Rails.root.join("app/assets/fonts/DMMono-Medium.ttf")
+    })
+
+    fallback_fonts(["noto"])
+  end
+
+  def write_header    
     repeat(:all) do
-      font_families.update("safehouse-font" => {
-        :normal => Rails.root.join("app/assets/fonts/MontserratSubrayada-Regular.ttf"),
-        :bold => Rails.root.join("app/assets/fonts/MontserratSubrayada-Bold.ttf"),
-      })
-      font "safehouse-font"
+      font "montserrat"
       # Use this font only for the title
 
       title = 'The Safehouse'
@@ -32,7 +52,9 @@ class ApplicationPdf
   end
 
   def write_body
+
     bounding_box([0, bounds.top - 80], width: bounds.width) do
+      font "dm-mono"
       yield
     end
   end
@@ -48,10 +70,10 @@ class ApplicationPdf
           border_width: 0.5,
           border_color: 'B0B0B0',
           padding_top: 10,
-          padding_bottom: 10
+          padding_bottom: 10,
         }
     ) do
-      row(0).style(font_style: :bold, background_color: "F0F0F0", align: :center, size: 14)
+      row(0).style(font: "montserrat", font_style: :bold, background_color: "F0F0F0", align: :center, size: 14)
       column(1).style(width: 100)
     end
   end
