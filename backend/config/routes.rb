@@ -18,5 +18,5 @@ Rails.application.routes.draw do
     put '/remove-quantity', on: :member, to: 'inventoriesitem#remove_quantity', as: 'remove-quantity'
   end
 
-  get '/reports/pdf', to: 'reports#survivors_report', defaults: { format: :pdf }
+  get '/reports/survivors/pdf/(:option)', to: 'reports#survivors_report', defaults: { format: :pdf }
 end
