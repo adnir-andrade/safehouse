@@ -28,14 +28,13 @@ class ApplicationPdf
   def write_header    
     repeat(:all) do
       font "montserrat"
-      # Use this font only for the title
 
       title = 'The Safehouse'
       date_text = "Date: #{Date.today.strftime('%d/%m/%Y')}"
 
       bounding_box([0, cursor], width: bounds.width, height: 40) do
-        # image 'app/assets/images/safehouse-logo.png', height: 40, at: [167, 71]
-        image 'app/assets/images/safehouse-logo.png', height: 40, at: [-30, 75]
+        image 'app/assets/images/safehouse-logo.png', height: 40, at: [167, 71]
+        # image 'app/assets/images/safehouse-logo.png', height: 40, at: [-30, 75]
 
         font_size(17) { draw_text title, at: [15, 45] }
         
