@@ -3,8 +3,8 @@ class ReportsController < ApplicationController
 
   def survivors_report
     survivors = Survivor.pluck(:name, :gender, :age)
-    sorted_survivors = sort_survivors(survivors)
-    pdf = SurvivorsPdf.new(survivors: sorted_survivors)
+    sort_survivors(survivors)
+    pdf = SurvivorsPdf.new(survivors: survivors)
     pdf.render_document
 
     respond_to do |format|
@@ -17,15 +17,15 @@ class ReportsController < ApplicationController
   def sort_survivors(survivors)
     case @sorter
     when "name-asc"
-      return survivors.sort_by { |survivor| survivor[0] }
+      survivors.sort_by! { |survivor| survivor[0] }
     when "name-desc"
-      return survivors.sort_by { |survivor| survivor[0] }.reverse
+      survivors.sort_by! { |survivor| survivor[0] }.reverse!
     when "gender"
-      return survivors.sort_by { |survivor| survivor[1] }
+      survivors.sort_by! { |survivor| survivor[1] }
     when "age-asc"
-      return survivors.sort_by { |survivor| survivor[2] }
+      survivors.sort_by! { |survivor| survivor[2] }
     when "age-desc"
-      return survivors.sort_by { |survivor| survivor[2] }.reverse
+      survivors.sort_by! { |survivor| survivor[2] }.reverse!
     else
       return survivors
     end
