@@ -9,7 +9,7 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        send_data(pdf.render, filename: 'survivors.pdf', type: 'application/pdf', disposition: 'inline')
+        send_data(pdf.render, filename: "survivors.pdf", type: "application/pdf", disposition: "inline")
       end
     end
   end
@@ -22,43 +22,33 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        send_data(pdf.render, filename: 'items.pdf', type: 'application/pdf', disposition: 'inline')
+        send_data(pdf.render, filename: "items.pdf", type: "application/pdf", disposition: "inline")
       end
     end
   end
 
   def sort_survivors(survivors)
-    case @sorter
-    when "name-asc"
-      survivors.sort_by! { |survivor| survivor[0] }
-    when "name-desc"
-      survivors.sort_by! { |survivor| survivor[0] }.reverse!
-    when "gender"
-      survivors.sort_by! { |survivor| survivor[1] }
-    when "age-asc"
-      survivors.sort_by! { |survivor| survivor[2] }
-    when "age-desc"
-      survivors.sort_by! { |survivor| survivor[2] }.reverse!
-    else
-      return survivors
-    end
+    filters = {
+      "name-asc" => -> { survivors.sort_by! { |survivor| survivor[0] } },
+      "name-desc" => -> { survivors.sort_by! { |survivor| survivor[0] }.reverse! },
+      "gender" => -> { survivors.sort_by! { |survivor| survivor[1] } },
+      "age-asc" => -> { survivors.sort_by! { |survivor| survivor[2] } },
+      "age-desc" => -> { survivors.sort_by! { |survivor| survivor[2] }.reverse! },
+    }
+
+    filters.fetch(@sorter, -> { return }).call
   end
 
   def sort_items(items)
-    case @sorter
-    when "name-asc"
-      items.sort_by! { |item| item[0] }
-    when "name-desc"
-      items.sort_by! { |item| item[0] }.reverse!
-    when "value-asc"
-      items.sort_by! { |item| item[1] }
-    when "value-desc"
-      items.sort_by! { |item| item[1] }.reverse!
-    when "description"
-      items.sort_by! { |item| item[2] }
-    else
-      return survivors
-    end
+    filters = {
+      "name-asc" => -> { items.sort_by! { |item| item[0] } },
+      "name-desc" => -> { items.sort_by! { |item| item[0] }.reverse! },
+      "value-asc" => -> { items.sort_by! { |item| item[1] } },
+      "value-desc" => -> { items.sort_by! { |item| item[1] }.reverse! },
+      "description" => -> { items.sort_by! { |item| item[2] } },
+    }
+
+    filters.fetch(@sorter, -> { return }).call
   end
 
   def set_sorter
