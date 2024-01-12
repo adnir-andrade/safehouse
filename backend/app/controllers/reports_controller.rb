@@ -1,30 +1,25 @@
 class ReportsController < ApplicationController
   before_action :set_sorter
 
-  def survivors_report
-    survivors = Survivor.pluck(:name, :gender, :age)
-    sort_survivors(survivors)
-    pdf = SurvivorsPdf.new(survivors: survivors)
+  def generate_report(entity_name, entity_class, entity_attributes, pdf_class, sort_method)
+    data = entity_class.pluck(entity_attributes)
+    sort_method.call(data)
+    pdf = pdf_class.new(data: data)
     pdf.render_document
 
     respond_to do |format|
       format.pdf do
-        send_data(pdf.render, filename: "survivors.pdf", type: "application/pdf", disposition: "inline")
+        send_data(pdf.render, filename: "#{entity_name}.pdf", type: "application/pdf", disposition: "inline")
       end
     end
   end
 
-  def items_report
-    items = Item.pluck(:name, :value, :description)
-    sort_items(items)
-    pdf = ItemsPdf.new(items: items)
-    pdf.render_document
+  def survivors_report
+    generate_report("survivor", Survivor, [:name, :gender, :age], SurvivorsPdf, method(:sort_survivors))
+  end
 
-    respond_to do |format|
-      format.pdf do
-        send_data(pdf.render, filename: "items.pdf", type: "application/pdf", disposition: "inline")
-      end
-    end
+  def items_report
+    generate_report("item", Item, [:name, :value, :description], ItemsPdf, method(:sort_items))
   end
 
   def sort_survivors(survivors)

@@ -1,9 +1,9 @@
 class SurvivorsPdf < ApplicationPdf
   attr_reader :pdf
 
-  def initialize(survivors:)
+  def initialize(data:)
     super()
-    @survivors = survivors
+    @survivors = data
   end
 
   def render_document

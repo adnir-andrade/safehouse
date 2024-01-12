@@ -1,9 +1,9 @@
 class ItemsPdf < ApplicationPdf
   attr_reader :pdf
 
-  def initialize(items:)
+  def initialize(data:)
     super()
-    @items = items
+    @items = data
   end
 
   def render_document
