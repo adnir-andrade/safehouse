@@ -20,4 +20,5 @@ Rails.application.routes.draw do
 
   get '/reports/survivors/pdf/(:option)', to: 'survivors_report#survivors_report', defaults: { format: :pdf }
   get '/reports/items/pdf/(:option)', to: 'items_report#items_report', defaults: { format: :pdf }
+  get '/reports/inventoriesitem/pdf/(:option)', to: 'inventoriesitem_report#inventoriesitem_report', defaults: { format: :pdf }
 end
