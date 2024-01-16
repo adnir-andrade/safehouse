@@ -1,6 +1,8 @@
 class SurvivorsReportController < ReportsController
   def survivors_report
-    generate_report("survivor", Survivor, [:name, :gender, :age], SurvivorsPdf, method(:sort_survivors))
+    data = Survivor.pluck([:name, :gender, :age])
+
+    generate_report("survivor", data, SurvivorsPdf, method(:sort_survivors))
   end
 
   def sort_survivors(survivors)

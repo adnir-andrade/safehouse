@@ -1,8 +1,8 @@
 class ReportsController < ApplicationController
   before_action :set_sorter
 
-  def generate_report(entity_name, entity_class, entity_attributes, pdf_class, sort_method)
-    data = entity_class.pluck(entity_attributes)
+  def generate_report(entity_name, data, pdf_class, sort_method)
+    # TODO: Implement Query OBject
     sort_method.call(data)
     
     respond_to do |format|

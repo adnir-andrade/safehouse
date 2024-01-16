@@ -1,6 +1,7 @@
 class ItemsReportController < ReportsController
     def items_report
-        generate_report("item", Item, [:name, :value, :description], ItemsPdf, method(:sort_items))
+        data = Item.pluck([:name, :value, :description])
+        generate_report("item", data, ItemsPdf, method(:sort_items))
     end
     
     def sort_items(items)
