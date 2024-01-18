@@ -10,7 +10,7 @@ class InventoriesitemPdf < ApplicationPdf
         write_header
         write_title('Inventories / Item')
         write_body do
-        write_table(header: ['ID', 'Owner', 'Item ID', 'Item Name', 'Quantity'], data: @inventoriesitem)
+        write_table(header: ['ID', 'Owner ID', 'Owner Name', 'Inventory ID', 'Item ID', 'Item Name', 'Quantity'], data: @inventoriesitem)
         end
 
         write_footer
