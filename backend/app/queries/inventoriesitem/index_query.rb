@@ -2,7 +2,23 @@ module IndexQuery
   extend self
   attr_reader :query
 
-  def get_query(sorter)
+  def sort_data
+    filters = {
+      "owner-asc" => -> { sort_by_owner_asc },
+      "owner-desc" => -> { sort_by_owner_desc },
+      "quantity-asc" => -> { sort_by_quantity_asc },
+      "quantity-desc" => -> { sort_by_quantity_desc },
+    }
+
+    filters.fetch(@sorter, -> {
+      get_query
+      return @query
+    }).call
+  end
+
+  private
+
+  def get_query(sorter = "id ASC")
     @query = InventoriesItem
       .joins(:item)
       .joins(:inventory)
@@ -30,19 +46,6 @@ module IndexQuery
     end
   end
 
-  def sort_data
-    filters = {
-      "owner-asc" => -> { sort_by_owner_asc },
-      "owner-desc" => -> { sort_by_owner_desc },
-      "quantity-asc" => -> { entries.sort_by! { |entry| entry[4] } },
-      "quantity-desc" => -> { entries.sort_by! { |entry| entry[4] }.reverse! },
-    }
-
-    filters.fetch(@sorter, -> { return }).call
-  end
-
-  private
-
   def sort_by_owner_asc
     get_query("survivors.name ASC")
     return @query
@@ -50,6 +53,16 @@ module IndexQuery
 
   def sort_by_owner_desc
     get_query("survivors.name DESC")
+    return @query
+  end
+
+  def sort_by_quantity_asc
+    get_query("quantity ASC")
+    return @query
+  end
+
+  def sort_by_quantity_desc
+    get_query("quantity DESC")
     return @query
   end
 end
