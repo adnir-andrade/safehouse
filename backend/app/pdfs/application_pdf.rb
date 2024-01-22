@@ -82,7 +82,7 @@ class ApplicationPdf
         text_color: "F2F7FE", 
         border_color: '3A1313',
         background_color: "8E0000", 
-        size: 13, 
+        size: 14, 
         overflow: :shrink_to_fit, 
         single_line: true
       )
