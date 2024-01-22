@@ -2,7 +2,7 @@ module IndexQuery
   extend self
   attr_reader :query
 
-  def sort_data
+  def sort_data(sorter)
     filters = {
       "owner-asc" => -> { sort_by_owner_asc },
       "owner-desc" => -> { sort_by_owner_desc },
@@ -10,7 +10,8 @@ module IndexQuery
       "quantity-desc" => -> { sort_by_quantity_desc },
     }
 
-    filters.fetch(@sorter, -> {
+    # binding.pry
+    filters.fetch(sorter, -> {
       get_query
       return @query
     }).call

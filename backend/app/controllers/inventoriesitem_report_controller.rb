@@ -5,7 +5,7 @@ class InventoriesitemReportController < ReportsController
   before_action :set_sorter
 
   def inventoriesitem_report
-    data = sort_data
+    data = IndexQuery::sort_data(@sorter)
     generate_report("inventoryitem", data, InventoriesitemPdf, method(:sort_data))
   end
 end
