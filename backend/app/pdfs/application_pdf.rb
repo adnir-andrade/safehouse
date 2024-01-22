@@ -25,7 +25,7 @@ class ApplicationPdf
     fallback_fonts(["noto"])
   end
 
-  def write_header    
+  def write_header
     repeat(:all) do
       font "montserrat"
 
@@ -37,7 +37,7 @@ class ApplicationPdf
         # image 'app/assets/images/safehouse-logo.png', height: 40, at: [-30, 75]
 
         font_size(17) { draw_text title, at: [15, 45] }
-        
+
         top_right = bounds.width - 15 - width_of(date_text)
         draw_text date_text, at: [top_right, 45]
 
@@ -65,15 +65,27 @@ class ApplicationPdf
       cell_style:
         {
           align: :center,
-          size: 12,
+          valign: :center,
+          size: 11,
           border_width: 0.5,
-          border_color: 'B0B0B0',
-          padding_top: 10,
-          padding_bottom: 10,
+          border_color: '7d7c7c',
+          padding_bottom: 10
         }
     ) do
-      row(0).style(font: "montserrat", font_style: :bold, background_color: "F0F0F0", align: :center, size: 14)
-      column(1).style(width: 100)
+      cells.style do |c|
+        c.background_color = ((c.row) % 2).zero? ? 'd6d6d6' : 'F0F0F0'
+      end
+
+      row(0).style(
+        font: "montserrat", 
+        font_style: :bold, 
+        text_color: "F2F7FE", 
+        border_color: '3A1313',
+        background_color: "8E0000", 
+        size: 13, 
+        overflow: :shrink_to_fit, 
+        single_line: true
+      )
     end
   end
 

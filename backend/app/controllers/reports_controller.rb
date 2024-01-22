@@ -2,9 +2,6 @@ class ReportsController < ApplicationController
   before_action :set_sorter
 
   def generate_report(entity_name, data, pdf_class, sort_method)
-    # TODO: Implement Query OBject
-    sort_method.call(data)
-    
     respond_to do |format|
       format.pdf do
         pdf = pdf_class.new(data: data)
