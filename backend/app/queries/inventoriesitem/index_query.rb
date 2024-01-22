@@ -10,7 +10,6 @@ module IndexQuery
       "quantity-desc" => -> { sort_by_quantity_desc },
     }
 
-    # binding.pry
     filters.fetch(sorter, -> {
       get_query
       return @query
