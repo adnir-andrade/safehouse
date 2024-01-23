@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     resources :locations
   end
 
+  resources :infectionclaims
+
   resources :items
 
   resources :inventories, only: [:show, :update]
