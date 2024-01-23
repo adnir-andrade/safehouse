@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_05_144944) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_23_051224) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -56,6 +56,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_05_144944) do
     t.bigint "inventory_id"
     t.bigint "location_id"
     t.boolean "is_archived"
+    t.integer "infection_claim_count", default: 0
+    t.integer "wallet", default: 0
     t.index ["inventory_id"], name: "index_survivors_on_inventory_id"
     t.index ["location_id"], name: "index_survivors_on_location_id"
   end

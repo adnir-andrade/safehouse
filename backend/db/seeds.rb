@@ -18,7 +18,8 @@ end
     name: Faker::Name.name,
     age: Faker::Number.between(from: 15, to: 90),
     gender: Faker::Gender.binary_type,
-    is_alive: "Alive"
+    is_alive: "Alive",
+    wallet: Faker::Number.between(from: 0, to: 200)
   )
 
   inventory = Inventory.create(
