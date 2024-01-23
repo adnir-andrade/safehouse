@@ -15,6 +15,7 @@ class Infectionclaims::CreateForm
   end
 
   def create
+    # TODO: Maybe check here if one of the survivors is dead already
     return false if invalid?
 
     create_claim
@@ -23,6 +24,7 @@ class Infectionclaims::CreateForm
   private
 
   def create_claim
+    # TODO: Not working properly - ID Is auto-incrementing even when there is already an existing entry
     Survivor.transaction do
       claim = InfectionClaim.new(
         whistleblower: whistleblower, 
@@ -30,11 +32,19 @@ class Infectionclaims::CreateForm
         )
   
       if claim.save!
+        check_survivor_claims
         return true
       else
         errors.merge!(claim.errors)
         return false
       end
+    end
+  end
+
+  def check_survivor_claims
+    infected_survivor.increment!(:infection_claim_count)
+    if infected_survivor.infection_claim_count >= 5
+      infected_survivor.update!(is_alive: false)
     end
   end
 end
