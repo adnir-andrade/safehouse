@@ -65,9 +65,8 @@ class SurvivorsController < ApplicationController
     }
   end
   
-  # Add is_alive as attribute to properly deal with UPDATE methods -.-
   def base_survivor_attributes
-    [:name, :gender, :age, :is_alive]
+    [:name, :gender, :age, :is_alive, :infection_claim_count, :wallet]
   end
 
 end

@@ -1,6 +1,6 @@
 class SurvivorSerializer < ActiveModel::Serializer
 
-  attributes :id, :name, :age, :gender, :is_alive, :location_id, :inventory_id, :created_at, :updated_at
+  attributes :id, :name, :age, :gender, :is_alive, :infection_claim_count, :wallet, :location_id, :inventory_id, :created_at, :updated_at
 
   has_many :locations
 
