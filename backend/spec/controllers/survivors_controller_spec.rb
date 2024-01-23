@@ -229,6 +229,8 @@ RSpec.describe SurvivorsController, type: :controller do
       gender: survivor.gender, 
       age: survivor.age, 
       is_alive: "Alive",
+      infection_claim_count: survivor.infection_claim_count,
+      wallet: survivor.wallet,
       locations: [], 
       created_at: survivor.created_at.strftime('%Y-%m-%d'),
       updated_at: survivor.updated_at.strftime('%Y-%m-%d'),
