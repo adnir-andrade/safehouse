@@ -21,7 +21,7 @@ class InfectionclaimsController < ApplicationController
     if form.create
       render json: form, status: :created, location: @survivor
     else
-      render json: { error: 'There was an error trying to CREATE an claim', details: form.errors }, status: :unprocessable_entity
+      render json: { error: 'There was an error trying to CREATE a claim', details: form.errors }, status: :unprocessable_entity
     end
   end
 
