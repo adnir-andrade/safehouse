@@ -35,14 +35,6 @@ class SurvivorsController < ApplicationController
     end
   end
   
-  def archive
-    if @survivor.update(is_archived: true)
-        render json: @survivor
-    else
-      render json: @survivor.errors, status: :unprocessable_entity
-    end
-  end
-
   def destroy
     render json: @survivor.destroy
   end
