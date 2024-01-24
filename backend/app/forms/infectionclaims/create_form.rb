@@ -17,7 +17,6 @@ class Infectionclaims::CreateForm
   end
 
   def create
-    # TODO: Maybe check here if one of the survivors is dead already
     return false if invalid?
 
     create_claim
