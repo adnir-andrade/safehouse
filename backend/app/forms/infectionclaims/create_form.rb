@@ -34,7 +34,7 @@ class Infectionclaims::CreateForm
       )
 
       if claim.save!
-        update_survivor_status
+        infected_survivor.increase_infected_count
         return true
       else
         errors.merge!(claim.errors)
@@ -47,13 +47,6 @@ class Infectionclaims::CreateForm
     return if @whistleblower.is_alive
 
     errors.add(:whistleblower, 'Whistleblower is infected or dead. Dead people have no opinion to give')
-  end
-
-  def update_survivor_status
-    infected_survivor.increment!(:infection_claim_count)
-    if infected_survivor.infection_claim_count >= 5
-      infected_survivor.update!(is_alive: false)
-    end
   end
 
   def unique_claim?
