@@ -49,6 +49,11 @@ class InventoriesitemController < ApplicationController
     end
   end
 
+  def trade
+    form = Inventoriesitem::TradeForm.new(inventoryitem_params)
+    form.start_trade
+  end
+
   private
 
   def set_inventoryitem
@@ -56,6 +61,6 @@ class InventoriesitemController < ApplicationController
   end
 
   def inventoryitem_params
-    params.require(:inventoriesitem).permit(:inventory_id, :item_id, :quantity)
+    params.require(:inventoriesitem).permit(:inventory_id, :item_id, :quantity, :buyer, :seller, :items_offered => [:item_id, :quantity], :items_wanted => [:item_id, :quantity])
   end
 end
