@@ -1,5 +1,5 @@
 class SurvivorsController < ApplicationController
-  before_action :set_survivor, only: %i[show update destroy archive]
+  before_action :set_survivor, only: %i[show update destroy]
 
   def index
     @survivors = Survivor.all
