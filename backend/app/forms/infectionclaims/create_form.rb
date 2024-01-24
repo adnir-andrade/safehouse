@@ -19,12 +19,12 @@ class Infectionclaims::CreateForm
   def create
     return false if invalid?
 
-    create_claim
+    process_claim
   end
 
   private
 
-  def create_claim
+  def process_claim
     # TODO: Not working properly - ID Is auto-incrementing even when there is already an existing entry
     # Check with Ana - If there is no viable solution, just take the transaction away, I guess
     Survivor.transaction do
