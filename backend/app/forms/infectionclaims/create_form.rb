@@ -5,6 +5,8 @@ class Infectionclaims::CreateForm
 
   validates :whistleblower, presence: true
   validates :infected_survivor, presence: true
+  validate :whistleblower_alive?
+  validate :unique_claim?
 
   def whistleblower=(id)
     @whistleblower = Survivor.find(id)
@@ -25,14 +27,15 @@ class Infectionclaims::CreateForm
 
   def create_claim
     # TODO: Not working properly - ID Is auto-incrementing even when there is already an existing entry
+    # Check with Ana - If there is no viable solution, just take the transaction away, I guess
     Survivor.transaction do
       claim = InfectionClaim.new(
-        whistleblower: whistleblower, 
-        infected_survivor: infected_survivor
-        )
-  
+        whistleblower: whistleblower,
+        infected_survivor: infected_survivor,
+      )
+
       if claim.save!
-        check_survivor_claims
+        update_survivor_status
         return true
       else
         errors.merge!(claim.errors)
@@ -41,10 +44,23 @@ class Infectionclaims::CreateForm
     end
   end
 
-  def check_survivor_claims
+  def whistleblower_alive?
+    return if @whistleblower.is_alive
+
+    errors.add(:whistleblower, 'Whistleblower is infected or dead. Dead people have no opinion to give')
+  end
+
+  def update_survivor_status
     infected_survivor.increment!(:infection_claim_count)
     if infected_survivor.infection_claim_count >= 5
       infected_survivor.update!(is_alive: false)
     end
+  end
+
+  def unique_claim?
+    claim_exists = InfectionClaim.exists?(whistleblower: whistleblower, infected_survivor: infected_survivor)
+    return unless claim_exists
+
+    errors.add(:claim, 'There is already a claim registered by this whistleblower against this survivor')
   end
 end
