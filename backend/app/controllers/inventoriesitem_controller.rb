@@ -51,7 +51,11 @@ class InventoriesitemController < ApplicationController
 
   def trade
     form = Inventoriesitem::TradeForm.new(inventoryitem_params)
-    form.start_trade
+    if form.start_trade
+      render json: form, status: :ok
+    else
+      render json: { error: 'Error trying to make a trade', details: form.errors }, status: :unprocessable_entity
+    end
   end
 
   private

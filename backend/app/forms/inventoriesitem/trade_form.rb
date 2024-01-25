@@ -24,8 +24,9 @@ class Inventoriesitem::TradeForm
   def start_trade
     @buyer_items = set_trade_items(buyer, items_offered)
     @seller_items = set_trade_items(seller, items_wanted)
-    binding.pry
+    return false if !has_enough_wanted_items?
     return false if invalid?
+    return true
   end
 
   private
@@ -52,5 +53,30 @@ class Inventoriesitem::TradeForm
       items_id << item[:item_id]
     }
     return InventoriesItem.where("inventory_id = #{survivor.inventory_id} AND item_id IN (#{items_id.join(', ')})")
+  end
+
+  def has_enough_wanted_items?
+    items_wanted.each { |item_wanted|
+      seller_items = @seller_items.select { |i| i.item_id == item_wanted[:item_id]}
+      items_in_stock = get_quantity(seller_items)
+
+      if item_wanted[:quantity] > items_in_stock
+        errors.add(:test, 'Not enough quantity in the inventory of the SELLER to be traded')
+        return false
+      end
+    }
+
+    return true
+  end
+
+  def get_quantity(item)
+    if item.count > 1
+      quantity = 0
+      item.each { |stack| quantity += stack[:quantity] }
+
+      return quantity
+    end
+
+    return item.first[:quantity]
   end
 end
