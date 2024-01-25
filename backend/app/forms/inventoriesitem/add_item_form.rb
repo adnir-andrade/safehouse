@@ -21,6 +21,7 @@ class Inventoriesitem::AddItemForm
   private
 
   def store_item(inventory_item)
+    # TODO: Think about implementing stack size in the future
     if inventory_item.persisted?
       inventory_item.quantity += quantity
     else
