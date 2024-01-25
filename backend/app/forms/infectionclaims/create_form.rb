@@ -25,34 +25,30 @@ class Infectionclaims::CreateForm
   private
 
   def process_claim
-    # TODO: Not working properly - ID Is auto-incrementing even when there is already an existing entry
-    # Check with Ana - If there is no viable solution, just take the transaction away, I guess
-    Survivor.transaction do
-      claim = InfectionClaim.new(
-        whistleblower: whistleblower,
-        infected_survivor: infected_survivor,
-      )
+    claim = InfectionClaim.new(
+      whistleblower: whistleblower,
+      infected_survivor: infected_survivor,
+    )
 
-      if claim.save!
-        infected_survivor.increase_infected_count
-        return true
-      else
-        errors.merge!(claim.errors)
-        return false
-      end
+    if claim.save!
+      infected_survivor.increase_infected_count
+      return true
+    else
+      errors.merge!(claim.errors)
+      return false
     end
   end
 
   def whistleblower_alive?
     return if @whistleblower.is_alive
 
-    errors.add(:whistleblower, 'Whistleblower is infected or dead. Dead people have no opinion to give')
+    errors.add(:whistleblower, "Whistleblower is infected or dead. Dead people have no opinion to give")
   end
 
   def unique_claim?
     claim_exists = InfectionClaim.exists?(whistleblower: whistleblower, infected_survivor: infected_survivor)
     return unless claim_exists
 
-    errors.add(:claim, 'There is already a claim registered by this whistleblower against this survivor')
+    errors.add(:claim, "There is already a claim registered by this whistleblower against this survivor")
   end
 end
