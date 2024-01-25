@@ -22,8 +22,8 @@ class Inventoriesitem::TradeForm
   end
 
   def start_trade
-    set_buyer_items
-    set_seller_items
+    @buyer_items = set_trade_items(buyer, items_offered)
+    @seller_items = set_trade_items(seller, items_wanted)
     binding.pry
     return false if invalid?
   end
@@ -46,19 +46,11 @@ class Inventoriesitem::TradeForm
     errors.add(:quantity, 'Not enough quantity in the inventory to be removed')
   end
 
-  def set_buyer_items
+  def set_trade_items(survivor, items)
     items_id = []
-    items_offered.each { |item|
+    items.each { |item|
       items_id << item[:item_id]
     }
-    @buyer_items = InventoriesItem.where("inventory_id = #{@buyer.inventory_id} AND item_id IN (#{items_id.join(', ')})")
-  end
-
-  def set_seller_items
-    items_id = []
-    items_wanted.each { |item|
-      items_id << item[:item_id]
-    }
-    @seller_items = InventoriesItem.where("inventory_id = #{@seller.inventory_id} AND item_id IN (#{items_id.join(', ')})")
+    return InventoriesItem.where("inventory_id = #{survivor.inventory_id} AND item_id IN (#{items_id.join(', ')})")
   end
 end
