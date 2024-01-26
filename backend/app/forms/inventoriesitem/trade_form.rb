@@ -6,10 +6,6 @@ class Inventoriesitem::TradeForm
   validates :vendor_offer, presence: true
   validates :buyer_offer, presence: true
 
-  # def quantity=(value)
-  #   @quantity = value.to_i.abs
-  # end
-
   def buyer=(id)
     @buyer = Survivor.find(id)
   end
