@@ -1,10 +1,10 @@
 class Inventoriesitem::TradeForm
   include ActiveModel::Model
 
-  attr_accessor :inventoryitem, :items_wanted, :items_offered, :buyer, :vendor
+  attr_accessor :inventoryitem, :vendor_offer, :buyer_offer, :buyer, :vendor
 
-  validates :items_wanted, presence: true
-  validates :items_offered, presence: true
+  validates :vendor_offer, presence: true
+  validates :buyer_offer, presence: true
 
   # def quantity=(value)
   #   @quantity = value.to_i.abs
@@ -20,10 +20,10 @@ class Inventoriesitem::TradeForm
 
   def initialize(attributes = {})
     super
-    @buyer_items = set_trade_items(buyer, items_offered)
-    @buyer_total_value = calculate_total(items_offered)
-    @vendor_items = set_trade_items(vendor, items_wanted)
-    @vendor_total_value = calculate_total(items_wanted)
+    @buyer_items = set_trade_items(buyer, buyer_offer)
+    @buyer_total_value = calculate_total(buyer_offer)
+    @vendor_items = set_trade_items(vendor, vendor_offer)
+    @vendor_total_value = calculate_total(vendor_offer)
   end
 
   def start_trade
@@ -39,10 +39,10 @@ class Inventoriesitem::TradeForm
   def trade
     InventoriesItem.transaction do
       puts "GETTING ITEMS FROM VENDOR TO BUYER"
-      transfer_items(items_wanted, @vendor, @buyer, @vendor_items)
+      transfer_items(vendor_offer, @vendor, @buyer, @vendor_items)
 
       puts "GETTING ITEMS FROM BUYER TO VENDOR"
-      transfer_items(items_offered, @buyer, @vendor, @buyer_items)
+      transfer_items(buyer_offer, @buyer, @vendor, @buyer_items)
     end
 
     return true
@@ -58,7 +58,7 @@ class Inventoriesitem::TradeForm
 
   # TODO: Apparently, gotta check from the fucking buyer as well
   def has_enough_wanted_items?
-    items_wanted.each { |item_wanted|
+    vendor_offer.each { |item_wanted|
       vendor_items = @vendor_items.select { |i| i.item_id == item_wanted[:item_id] }
       items_in_stock = get_quantity(vendor_items)
 
