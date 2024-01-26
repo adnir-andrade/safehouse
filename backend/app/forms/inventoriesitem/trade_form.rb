@@ -39,10 +39,10 @@ class Inventoriesitem::TradeForm
   def trade
     InventoriesItem.transaction do
       puts "GETTING ITEMS FROM VENDOR TO BUYER"
-      transfer_items(vendor_offer, @vendor, @buyer, @vendor_items)
+      transfer_items(vendor_offer, @buyer, @vendor_items)
 
       puts "GETTING ITEMS FROM BUYER TO VENDOR"
-      transfer_items(buyer_offer, @buyer, @vendor, @buyer_items)
+      transfer_items(buyer_offer, @vendor, @buyer_items)
     end
 
     return true
@@ -103,7 +103,7 @@ class Inventoriesitem::TradeForm
     return true
   end
 
-  def transfer_items(items, sender, receiver, sender_items)
+  def transfer_items(items, receiver, sender_items)
     add_item_forms = []
     remove_quantity_forms = []
     items.each { |item|
