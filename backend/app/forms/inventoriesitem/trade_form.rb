@@ -1,7 +1,7 @@
 class Inventoriesitem::TradeForm
   include ActiveModel::Model
 
-  attr_accessor :inventoryitem, :items_wanted, :items_offered, :buyer, :seller
+  attr_accessor :inventoryitem, :items_wanted, :items_offered, :buyer, :vendor
 
   validates :items_wanted, presence: true
   validates :items_offered, presence: true
@@ -14,16 +14,16 @@ class Inventoriesitem::TradeForm
     @buyer = Survivor.find(id)
   end
 
-  def seller=(id)
-    @seller = Survivor.find(id)
+  def vendor=(id)
+    @vendor = Survivor.find(id)
   end
 
   def initialize(attributes = {})
     super
     @buyer_items = set_trade_items(buyer, items_offered)
     @buyer_total_value = calculate_total(items_offered)
-    @seller_items = set_trade_items(seller, items_wanted)
-    @seller_total_value = calculate_total(items_wanted)
+    @vendor_items = set_trade_items(vendor, items_wanted)
+    @vendor_total_value = calculate_total(items_wanted)
   end
 
   def start_trade
@@ -31,6 +31,7 @@ class Inventoriesitem::TradeForm
     return false if !has_enough_money?
     return false if invalid?
     trade
+    return true
   end
 
   private
@@ -38,10 +39,10 @@ class Inventoriesitem::TradeForm
   def trade
     InventoriesItem.transaction do
       puts "GETTING ITEMS FROM VENDOR TO BUYER"
-      transfer_items(items_wanted, @seller, @buyer, @seller_items)
+      transfer_items(items_wanted, @vendor, @buyer, @vendor_items)
 
       puts "GETTING ITEMS FROM BUYER TO VENDOR"
-      transfer_items(items_offered, @buyer, @seller, @buyer_items)
+      transfer_items(items_offered, @buyer, @vendor, @buyer_items)
     end
 
     return true
@@ -58,8 +59,8 @@ class Inventoriesitem::TradeForm
   # TODO: Apparently, gotta check from the fucking buyer as well
   def has_enough_wanted_items?
     items_wanted.each { |item_wanted|
-      seller_items = @seller_items.select { |i| i.item_id == item_wanted[:item_id] }
-      items_in_stock = get_quantity(seller_items)
+      vendor_items = @vendor_items.select { |i| i.item_id == item_wanted[:item_id] }
+      items_in_stock = get_quantity(vendor_items)
 
       if item_wanted[:quantity] > items_in_stock
         # Alternatively: Would be a good idea to set the desired quantity to the max. quantity available in this case.
@@ -94,7 +95,7 @@ class Inventoriesitem::TradeForm
   end
 
   def has_enough_money?
-    if @buyer_total_value < @seller_total_value
+    if @buyer_total_value < @vendor_total_value
       errors.add(:money, "The buyer doesn't have enough money to proceed with this trade")
       return false
     end

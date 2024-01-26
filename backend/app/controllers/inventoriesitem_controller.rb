@@ -65,6 +65,6 @@ class InventoriesitemController < ApplicationController
   end
 
   def inventoryitem_params
-    params.require(:inventoriesitem).permit(:inventory_id, :item_id, :quantity, :buyer, :seller, :items_offered => [:item_id, :quantity], :items_wanted => [:item_id, :quantity])
+    params.require(:inventoriesitem).permit(:inventory_id, :item_id, :quantity, :buyer, :vendor, :items_offered => [:item_id, :quantity, :cash], :items_wanted => [:item_id, :quantity, :cash])
   end
 end
