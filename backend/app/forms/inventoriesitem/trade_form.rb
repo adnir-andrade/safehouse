@@ -1,67 +1,74 @@
 class Inventoriesitem::TradeForm
   include ActiveModel::Model
 
-  attr_accessor :inventoryitem, :vendor_offer, :buyer_offer, :buyer, :vendor
+  attr_accessor :inventoryitem, :buyer, :vendor
 
-  validates :vendor_offer, presence: true
-  validates :buyer_offer, presence: true
-
-  def buyer=(id)
-    @buyer = Survivor.find(id)
-  end
-
-  def vendor=(id)
-    @vendor = Survivor.find(id)
-  end
+  validates :buyer, presence: true
+  validates :vendor, presence: true
 
   def initialize(attributes = {})
     super
-    @buyer_items = set_trade_items(buyer, buyer_offer)
-    @buyer_total_value = calculate_total(buyer_offer)
-    @vendor_items = set_trade_items(vendor, vendor_offer)
-    @vendor_total_value = calculate_total(vendor_offer)
+    @buyer_entity = set_entity(buyer)
+    @vendor_entity = set_entity(vendor)
+
+    @buyer_offer = set_trade_offers(@buyer_entity, buyer)
+    @vendor_offer = set_trade_offers(@vendor_entity, vendor)
   end
 
   def start_trade
-    return false if !has_enough_wanted_items?
-    return false if !has_enough_money?
+    return false if !has_enough_resources?(@buyer_entity, @buyer_offer)
+    return false if !has_enough_resources?(@vendor_entity, @vendor_offer)
+    return false if !can_buyer_afford?
     return false if invalid?
     trade
     return true
   end
 
   private
-
-  def trade
-    InventoriesItem.transaction do
-      puts "GETTING ITEMS FROM VENDOR TO BUYER"
-      transfer_items(vendor_offer, @buyer, @vendor_items)
-
-      puts "GETTING ITEMS FROM BUYER TO VENDOR"
-      transfer_items(buyer_offer, @vendor, @buyer_items)
-    end
-
-    return true
+  def set_entity(entity)
+    return Survivor.find(entity[:survivor_id])
   end
 
-  def set_trade_items(survivor, items)
-    items_id = []
-    items.each { |item|
-      items_id << item[:item_id]
+  def set_trade_offers(survivor, entity)
+    final_offer = {}
+    items = []
+
+    entity[:offers].each { |offer|
+      item = {}
+      item[:inventoryitem_id], item[:item_id], item[:quantity_available] = InventoriesItem.where(
+        item_id: offer[:item_id], 
+        inventory_id: survivor[:inventory_id]).pluck(:id, :item_id, :quantity).first
+      item[:quantity_offered] = offer[:quantity]
+      items << item
     }
-    return InventoriesItem.where("inventory_id = #{survivor.inventory_id} AND item_id IN (#{items_id.join(", ")})")
+
+    final_offer[:items] = items
+    final_offer[:cash] = entity[:cash]
+    final_offer[:total_value] = calculate_total(final_offer)
+    return final_offer
   end
 
-  # TODO: Apparently, gotta check from the fucking buyer as well
-  def has_enough_wanted_items?
-    vendor_offer.each { |item_wanted|
-      vendor_items = @vendor_items.select { |i| i.item_id == item_wanted[:item_id] }
-      items_in_stock = get_quantity(vendor_items)
+  def calculate_total(offer)
+    total = 0
+    offer[:items].each { |item|
+      value = Item.where(id: item[:item_id]).pluck(:value).first
+      total += item[:quantity_offered] * value
+    }
 
-      if item_wanted[:quantity] > items_in_stock
-        # Alternatively: Would be a good idea to set the desired quantity to the max. quantity available in this case.
-        # But I think, for now, this is good.
-        errors.add(:quantity, "Not enough quantity in the inventory of the SELLER to be traded")
+    total += offer[:cash]
+
+    return total
+  end
+
+  def has_enough_resources?(survivor, offer)
+    offer[:items].each { |item|
+      if  item[:quantity_offered] > item[:quantity_available]
+        errors.add(:quantity, "Survivor ID #{survivor[:id]} doesn't have enough from Item ID #{item[:item_id]} to be traded.")
+        return false
+      end
+
+      if offer[:cash] > survivor[:wallet]
+        errors.add(:cash, "Survivor ID #{survivor[:id]} doesn't have enough cash in his wallet to trade.")
         return false
       end
     }
@@ -69,50 +76,42 @@ class Inventoriesitem::TradeForm
     return true
   end
 
-  def get_quantity(item)
-    if item.count > 1
-      quantity = 0
-      item.each { |stack| quantity += stack[:quantity] }
-
-      return quantity
-    end
-
-    return item.first[:quantity]
-  end
-
-  def calculate_total(items)
-    total = 0
-    items.each { |item|
-      item_entry = Item.find_by id: item[:item_id]
-      total += item[:quantity] * item_entry[:value]
-    }
-
-    return total
-  end
-
-  def has_enough_money?
-    if @buyer_total_value < @vendor_total_value
-      errors.add(:money, "The buyer doesn't have enough money to proceed with this trade")
+  def can_buyer_afford?
+    if @buyer_offer[:total_value] < @vendor_offer[:total_value]
+      errors.add(:money, "The buyer doesn't have enough to offer to proceed with this trade. Please offer more cash or items.")
       return false
     end
 
     return true
   end
 
-  def transfer_items(items, receiver, sender_items)
+  def trade
+    InventoriesItem.transaction do
+      puts "GETTING ITEMS FROM VENDOR TO BUYER"
+      transfer_items(@vendor_offer , @buyer_entity)
+
+      puts "GETTING ITEMS FROM BUYER TO VENDOR"
+      transfer_items(@buyer_offer, @vendor_entity)
+    end
+
+    return true
+  end
+
+  def transfer_items(sender, receiver)
     add_item_forms = []
     remove_quantity_forms = []
-    items.each { |item|
+    sender[:items].each { |item|
       # TODO: Consider changing this part to deal with stack size
       add_item_forms << Inventoriesitem::AddItemForm.new(
         { inventory_id: receiver[:inventory_id],
-          item_id: item[:item_id],
-          quantity: item[:quantity] }
+        item_id: item[:item_id],
+        quantity: item[:quantity_offered] }
       )
-      sender_item = sender_items.select { |i| i.item_id == item[:item_id] }
+
       remove_quantity_forms << Inventoriesitem::RemoveQuantityForm.new(
-        { inventoryitem: sender_item.first,
-          quantity: item[:quantity] })
+        { inventoryitem: item[:inventoryitem_id],
+        quantity: item[:quantity_offered] }
+      )
     }
 
     check_for_errors(add_item_forms, remove_quantity_forms)

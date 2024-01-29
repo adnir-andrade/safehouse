@@ -35,7 +35,7 @@ class InventoriesitemController < ApplicationController
     if form.add_quantity
       render json: form, status: :created
     else
-      render json: { error: 'There was an error trying to ADD AN ITEM to this inventory', details: form.errors }, status: :unprocessable_entity
+      render json: { error: "There was an error trying to ADD AN ITEM to this inventory", details: form.errors }, status: :unprocessable_entity
     end
   end
 
@@ -45,7 +45,7 @@ class InventoriesitemController < ApplicationController
     if form.remove_quantity
       render json: form, status: :ok
     else
-      render json: { error: 'Error trying to remove quantity', details: form.errors }, status: :unprocessable_entity
+      render json: { error: "Error trying to remove quantity", details: form.errors }, status: :unprocessable_entity
     end
   end
 
@@ -54,7 +54,7 @@ class InventoriesitemController < ApplicationController
     if form.start_trade
       render json: form, status: :ok
     else
-      render json: { error: 'Error trying to make a trade', details: form.errors }, status: :unprocessable_entity
+      render json: { error: "Error trying to make a trade", details: form.errors }, status: :unprocessable_entity
     end
   end
 
@@ -66,14 +66,11 @@ class InventoriesitemController < ApplicationController
 
   def inventoryitem_params
     params.require(:inventoriesitem).permit(
-      :inventory_id, 
-      :item_id, 
-      :quantity, 
-      :buyer, 
-      :vendor, 
-      :buyer_offer => [:item_id, :quantity], 
-      :vendor_offer => [:item_id, :quantity, :cash])
+      :inventory_id,
+      :item_id,
+      :quantity,
+      :buyer => [:survivor_id, :cash, :offers => [:item_id, :quantity]],
+      :vendor => [:survivor_id, :cash, :offers => [:item_id, :quantity]],
+    )
   end
-  # Gotta refactor this to something like buyer: [:survivor_id, { offer: [:item_id, :quantity], cash: :numeric_value }]
-
 end
