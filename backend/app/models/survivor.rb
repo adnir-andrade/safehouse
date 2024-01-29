@@ -11,4 +11,13 @@ class Survivor < ApplicationRecord
     increment!(:infection_claim_count)
     update(is_alive: false) if infection_claim_count >= 5 && is_alive
   end
+
+  def change_wallet_funds(value)
+    new_value = wallet + value 
+    
+    return false if new_value < 0
+    
+    update(wallet: new_value)
+    return true
+  end
 end

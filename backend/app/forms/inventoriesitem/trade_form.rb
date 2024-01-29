@@ -43,7 +43,7 @@ class Inventoriesitem::TradeForm
     }
 
     final_offer[:items] = items
-    final_offer[:cash] = entity[:cash]
+    final_offer[:cash] = entity[:cash].abs
     final_offer[:total_value] = calculate_total(final_offer)
     return final_offer
   end
@@ -87,11 +87,13 @@ class Inventoriesitem::TradeForm
 
   def trade
     InventoriesItem.transaction do
-      puts "GETTING ITEMS FROM VENDOR TO BUYER"
+      puts "GETTING GOODS FROM VENDOR TO BUYER"
       transfer_items(@vendor_offer , @buyer_entity)
+      transfer_cash(@vendor_entity, @buyer_entity, @vendor_offer[:cash])
 
-      puts "GETTING ITEMS FROM BUYER TO VENDOR"
+      puts "GETTING GOODS FROM BUYER TO VENDOR"
       transfer_items(@buyer_offer, @vendor_entity)
+      transfer_cash(@buyer_entity, @vendor_entity, @buyer_offer[:cash])
     end
 
     return true
@@ -113,8 +115,16 @@ class Inventoriesitem::TradeForm
         quantity: item[:quantity_offered] }
       )
     }
-
+    
     check_for_errors(add_item_forms, remove_quantity_forms)
+  end
+
+  def transfer_cash(sender, receiver, cash)
+    receiver.change_wallet_funds(cash)
+
+    unless sender.change_wallet_funds(-cash)
+      errors.add(:wallet, "Cannot change wallet of survivor ID #{sender[:id]} because it will go bankrupt!")
+    end
   end
 
   def check_for_errors(add_item_forms, remove_quantity_forms)
