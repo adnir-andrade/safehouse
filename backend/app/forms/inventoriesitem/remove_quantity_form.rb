@@ -4,12 +4,12 @@ class Inventoriesitem::RemoveQuantityForm
   attr_accessor :inventoryitem, :quantity
 
   validates :quantity, presence: true, numericality: { only_integer: true }
-  validate :has_enough?
+  validates :inventoryitem, presence: true
+  validate :has_enough?, on: :validation_step
+  validate :is_survivor_alive?, on: :validation_step
 
   def inventoryitem=(value)
-    if value.is_a?(Integer)
-      @inventoryitem = InventoriesItem.find(value)
-    end
+    @inventoryitem = value.is_a?(Integer) ? InventoriesItem.find(value) : value
   end
 
   def quantity=(value)
@@ -35,8 +35,14 @@ class Inventoriesitem::RemoveQuantityForm
     end
   end
 
+  def is_survivor_alive?
+    survivor = Survivor.find_by(inventory_id: inventoryitem[:inventory_id])
+    return if survivor[:is_alive]
+
+    errors.add(:survivor, "Survivor is either dead or infected. It's inventory cannot be changed")
+  end
+
   def has_enough?
-    #TODO: Urgently refactor this to catch more errors 
     return if @inventoryitem.quantity - @quantity > 0
 
     errors.add(:quantity, 'Not enough quantity in the inventory to be removed')

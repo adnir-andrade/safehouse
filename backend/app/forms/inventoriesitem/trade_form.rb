@@ -5,6 +5,7 @@ class Inventoriesitem::TradeForm
 
   validates :buyer, presence: true
   validates :vendor, presence: true
+  validate :is_survivor_alive?
 
   def initialize(attributes = {})
     super
@@ -25,6 +26,19 @@ class Inventoriesitem::TradeForm
   end
 
   private
+
+  def is_survivor_alive?
+    return if @buyer_entity[:is_alive] && @vendor_entity[:is_alive]
+
+    if !@buyer_entity[:is_alive]
+      errors.add(:survivor, "Buyer is either dead or infected and can't proceed with this trade")
+    end
+
+    if !@vendor_entity[:is_alive]
+      errors.add(:survivor, "Vendor is either dead or infected and can't proceed with this trade")
+    end
+  end
+
   def set_entity(entity)
     return Survivor.find(entity[:survivor_id])
   end
@@ -36,8 +50,9 @@ class Inventoriesitem::TradeForm
     entity[:offers].each { |offer|
       item = {}
       item[:inventoryitem_id], item[:item_id], item[:quantity_available] = InventoriesItem.where(
-        item_id: offer[:item_id], 
-        inventory_id: survivor[:inventory_id]).pluck(:id, :item_id, :quantity).first
+        item_id: offer[:item_id],
+        inventory_id: survivor[:inventory_id],
+      ).pluck(:id, :item_id, :quantity).first
       item[:quantity_offered] = offer[:quantity]
       items << item
     }
@@ -62,7 +77,7 @@ class Inventoriesitem::TradeForm
 
   def has_enough_resources?(survivor, offer)
     offer[:items].each { |item|
-      if  item[:quantity_offered] > item[:quantity_available]
+      if item[:quantity_offered] > item[:quantity_available]
         errors.add(:quantity, "Survivor ID #{survivor[:id]} doesn't have enough from Item ID #{item[:item_id]} to be traded.")
         return false
       end
@@ -88,7 +103,7 @@ class Inventoriesitem::TradeForm
   def trade
     InventoriesItem.transaction do
       puts "GETTING GOODS FROM VENDOR TO BUYER"
-      transfer_items(@vendor_offer , @buyer_entity)
+      transfer_items(@vendor_offer, @buyer_entity)
       transfer_cash(@vendor_entity, @buyer_entity, @vendor_offer[:cash])
 
       puts "GETTING GOODS FROM BUYER TO VENDOR"
@@ -106,16 +121,16 @@ class Inventoriesitem::TradeForm
       # TODO: Consider changing this part to deal with stack size
       add_item_forms << Inventoriesitem::AddItemForm.new(
         { inventory_id: receiver[:inventory_id],
-        item_id: item[:item_id],
-        quantity: item[:quantity_offered] }
+          item_id: item[:item_id],
+          quantity: item[:quantity_offered] }
       )
 
       remove_quantity_forms << Inventoriesitem::RemoveQuantityForm.new(
         { inventoryitem: item[:inventoryitem_id],
-        quantity: item[:quantity_offered] }
+          quantity: item[:quantity_offered] }
       )
     }
-    
+
     check_for_errors(add_item_forms, remove_quantity_forms)
   end
 
