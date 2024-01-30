@@ -5,6 +5,7 @@ RSpec.describe InventoriesitemController, type: :controller do
   let(:item) { create(:item) }
   let(:inventoryitem) { attributes_for(:inventoryitem) }
   let(:standard_entry) { attributes_for(:inventoryitem, inventory_id: inventory.id, item_id: item.id) }
+  let(:standard_survivor) { create(:survivor) }
 
   describe 'GET #index' do
     it 'returns all records' do
@@ -53,12 +54,14 @@ RSpec.describe InventoriesitemController, type: :controller do
   describe 'POST #add_item' do
     context 'using valid attributes' do
       it 'adds new entry to the inventory' do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         post :add_item, params: { inventoriesitem: standard_entry }
 
         validate_success(response, 201, 1)
       end
 
       it 'adds quantity to existing entry' do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         existing_entry = InventoriesItem.create(standard_entry)
         original_quantity = existing_entry.quantity
         
@@ -69,6 +72,7 @@ RSpec.describe InventoriesitemController, type: :controller do
       end
 
       it 'creates a new entry with minimum quantity' do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: 1) }
 
         validate_success(response, 201, 1)
@@ -77,12 +81,14 @@ RSpec.describe InventoriesitemController, type: :controller do
 
     context 'using invalid attributes' do
       it "doesn't create a new entry when quantity below minimum" do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: 0) }
 
         validate_success(response, 422)
       end
 
       it "doesn't create a new entry when quantity is nil or empty" do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: nil) }
 
         validate_success(response, 422)
