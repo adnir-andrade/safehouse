@@ -1,5 +1,5 @@
 require 'rails_helper'
 
 RSpec.describe InfectionClaim, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  pending "Check if necessary test in every model #{__FILE__}"
 end

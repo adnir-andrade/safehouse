@@ -163,6 +163,10 @@ RSpec.describe InventoriesitemController, type: :controller do
     end
   end
 
+  describe 'PUT #trade' do
+    pending "TODO: Implement tests for trades here later #{__FILE__}"
+  end
+
   def validate_success(response, status, db_entries = 0)
     expect(response).to have_http_status(status)
     expect(InventoriesItem.count).to eq(db_entries)
