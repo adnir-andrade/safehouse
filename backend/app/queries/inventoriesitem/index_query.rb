@@ -32,6 +32,7 @@ module IndexQuery
         "items.name AS item_name",
         "inventories_items.quantity",
       )
+      .where("survivors.is_alive": true)
       .order(sorter)
 
     @query = @query.map do |entry|
