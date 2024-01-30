@@ -4,10 +4,10 @@ module IndexQuery
 
   def sort_data(sorter)
     filters = {
-      "owner-asc" => -> { sort_by_owner_asc },
-      "owner-desc" => -> { sort_by_owner_desc },
-      "quantity-asc" => -> { sort_by_quantity_asc },
-      "quantity-desc" => -> { sort_by_quantity_desc },
+      "owner-asc" => -> { get_query("survivors.name ASC") },
+      "owner-desc" => -> { get_query("survivors.name DESC") },
+      "quantity-asc" => -> { get_query("quantity ASC") },
+      "quantity-desc" => -> { get_query("quantity DESC") },
     }
 
     filters.fetch(sorter, -> {
@@ -33,7 +33,8 @@ module IndexQuery
         "inventories_items.quantity",
       )
       .order(sorter)
-      .map do |entry|
+
+    @query = @query.map do |entry|
       {
         id: entry.id,
         owner_id: entry.owner_id,
@@ -44,25 +45,5 @@ module IndexQuery
         quantity: entry.quantity,
       }.values
     end
-  end
-
-  def sort_by_owner_asc
-    get_query("survivors.name ASC")
-    return @query
-  end
-
-  def sort_by_owner_desc
-    get_query("survivors.name DESC")
-    return @query
-  end
-
-  def sort_by_quantity_asc
-    get_query("quantity ASC")
-    return @query
-  end
-
-  def sort_by_quantity_desc
-    get_query("quantity DESC")
-    return @query
   end
 end
