@@ -1,37 +1,28 @@
-# module IndexQuery
-#   extend self
-#   attr_reader :query
+module StatusQuery
+  extend self
+  attr_reader :query
 
-#   def sort_data(sorter)
-#     filters = {
-#       "name-asc" => -> { get_query("name ASC") },
-#       "name-desc" => -> { get_query("name DESC") },
-#       "gender" => -> { get_query("gender") },
-#       "age-asc" => -> { get_query("age ASC") },
-#       "age-desc" => -> { get_query("age DESC") },
-#     }
+  def filter
+    get_query
+  end
 
-#     filters.fetch(sorter, -> {
-#       get_query
-#       return @query
-#     }).call
-#   end
+  private
 
-#   private
+  def get_query()
+    # TODO: NOT working as intended. gotta make a subquery, possibly, and use "count"
+    @query = Survivor.select(
+      "SUM(CASE WHEN is_alive = true THEN 1 ELSE 0 END) AS not_infected",
+      "SUM(CASE WHEN is_alive = false THEN 1 ELSE 0 END) AS infected",
+      "COUNT(*) AS total"
+    ).group(:is_alive)
 
-#   def get_query(sorter = "id ASC")
-#     @query = Survivor.select(
-#       "name", 
-#       "gender", 
-#       "age"
-#       ).where(is_alive: true).order(sorter)
+    binding.pry
       
-#     @query = @query.map do |entry|
-#       {
-#         name: entry.name,
-#         gender: entry.gender,
-#         age: entry.age
-#       }.values
-#     end
-#   end
-# end
+    @query = @query.map do |entry|
+      {
+        not_infected: entry.not_infected / entry.total,
+        infected: entry.infected / entry.total,
+      }.values
+    end
+  end
+end
