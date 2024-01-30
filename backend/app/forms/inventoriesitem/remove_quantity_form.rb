@@ -6,7 +6,7 @@ class Inventoriesitem::RemoveQuantityForm
   validates :quantity, presence: true, numericality: { only_integer: true }
   validates :inventoryitem, presence: true
   validate :has_enough?
-  validate :is_survivor_alive?, on: :validation_step
+  validate :is_survivor_alive?
 
   def inventoryitem=(value)
     @inventoryitem = value.is_a?(Integer) ? InventoriesItem.find(value) : value
