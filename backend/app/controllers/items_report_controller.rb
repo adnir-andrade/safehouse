@@ -1,11 +1,12 @@
 require_relative "../queries/items/index_query"
 
 class ItemsReportController < ReportsController
-  include IndexQuery
+  include ItemQuery
   before_action :set_sorter
 
   def items_report
-    data = IndexQuery::sort_data(@sorter)
-    generate_report("item", data, ItemsPdf)
+    data = ItemQuery::sort_data(@sorter)
+    headers = ['Name', 'Value', 'Description']
+    generate_report("item", data, ItemsPdf, headers)
   end
 end

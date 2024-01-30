@@ -1,4 +1,4 @@
-module IndexQuery
+module SurvivorQuery
   extend self
   attr_reader :query
 

@@ -1,4 +1,4 @@
-module IndexQuery
+module ItemQuery
   extend self
   attr_reader :query
 

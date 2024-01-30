@@ -1,4 +1,4 @@
-module IndexQuery
+module InventoryitemQuery
   extend self
   attr_reader :query
 
