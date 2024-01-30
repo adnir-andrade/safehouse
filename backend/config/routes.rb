@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
   resources :survivors do
-    put '/archive', to: 'survivors#archive', as: 'archive'
     resources :locations
   end
+
+  resources :infectionclaims
 
   resources :items
 
@@ -13,6 +14,8 @@ Rails.application.routes.draw do
       post '/add-item', to: 'inventoriesitem#add_item', as: 'add-item'
 
       get '/inventory/:inventory_id', to: 'inventoriesitem#inventory_index', as: 'inventory-index'
+
+      put '/trade', to: 'inventoriesitem#trade', as: 'trade'
     end
     
     put '/remove-quantity', on: :member, to: 'inventoriesitem#remove_quantity', as: 'remove-quantity'

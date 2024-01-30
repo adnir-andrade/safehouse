@@ -5,6 +5,7 @@ RSpec.describe InventoriesitemController, type: :controller do
   let(:item) { create(:item) }
   let(:inventoryitem) { attributes_for(:inventoryitem) }
   let(:standard_entry) { attributes_for(:inventoryitem, inventory_id: inventory.id, item_id: item.id) }
+  let(:standard_survivor) { create(:survivor) }
 
   describe 'GET #index' do
     it 'returns all records' do
@@ -53,12 +54,14 @@ RSpec.describe InventoriesitemController, type: :controller do
   describe 'POST #add_item' do
     context 'using valid attributes' do
       it 'adds new entry to the inventory' do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         post :add_item, params: { inventoriesitem: standard_entry }
 
         validate_success(response, 201, 1)
       end
 
       it 'adds quantity to existing entry' do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         existing_entry = InventoriesItem.create(standard_entry)
         original_quantity = existing_entry.quantity
         
@@ -69,6 +72,7 @@ RSpec.describe InventoriesitemController, type: :controller do
       end
 
       it 'creates a new entry with minimum quantity' do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: 1) }
 
         validate_success(response, 201, 1)
@@ -77,13 +81,22 @@ RSpec.describe InventoriesitemController, type: :controller do
 
     context 'using invalid attributes' do
       it "doesn't create a new entry when quantity below minimum" do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: 0) }
 
         validate_success(response, 422)
       end
 
       it "doesn't create a new entry when quantity is nil or empty" do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         post :add_item, params: { inventoriesitem: standard_entry.merge(quantity: nil) }
+
+        validate_success(response, 422)
+      end
+
+      it "doesn't create a new entry when owner of inventory (survivor) is dead/infected" do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id], is_alive: false)
+        post :add_item, params: { inventoriesitem: standard_entry }
 
         validate_success(response, 422)
       end
@@ -93,6 +106,7 @@ RSpec.describe InventoriesitemController, type: :controller do
   describe 'PUT #remove_quantity' do
     context 'using valid attributes' do
       it 'removes quantity from an entry' do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
         put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: 3 } }
         
@@ -101,6 +115,7 @@ RSpec.describe InventoriesitemController, type: :controller do
       end
 
       it 'removes quantity from an entry passing a negative number' do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
         put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: -3 } }
         
@@ -111,6 +126,7 @@ RSpec.describe InventoriesitemController, type: :controller do
 
     context 'using invalid attributes' do
       it "doesn't change anything if quantity is empty or nil" do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
         put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: nil } }
         
@@ -119,6 +135,7 @@ RSpec.describe InventoriesitemController, type: :controller do
       end
 
       it "doesn't change anything if quantity is a string" do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
         put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: "five" } }
         
@@ -127,13 +144,27 @@ RSpec.describe InventoriesitemController, type: :controller do
       end
 
       it "doesn't change anything if there isn't enough quantity to be decreased" do
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id])
         existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
         put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: 11 } }
         
         expect(existing_entry.reload.quantity).to eq(10)
         validate_success(response, 422, 1)
       end
+
+      it "doesn't change anything if owner of inventory (survivor) is dead/infected" do
+        existing_entry = InventoriesItem.create(standard_entry.merge(quantity: 10))
+        standard_survivor.update(inventory_id: standard_entry[:inventory_id], is_alive: false)
+        put :remove_quantity, params: { id: existing_entry.id, inventoriesitem: { quantity: 2 } }
+
+        expect(existing_entry.reload.quantity).to eq(10)
+        validate_success(response, 422, 1)
+      end
     end
+  end
+
+  describe 'PUT #trade' do
+    pending "TODO: Implement tests for trades here later #{__FILE__}"
   end
 
   def validate_success(response, status, db_entries = 0)

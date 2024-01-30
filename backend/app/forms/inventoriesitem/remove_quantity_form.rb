@@ -4,7 +4,13 @@ class Inventoriesitem::RemoveQuantityForm
   attr_accessor :inventoryitem, :quantity
 
   validates :quantity, presence: true, numericality: { only_integer: true }
+  validates :inventoryitem, presence: true
   validate :has_enough?
+  validate :is_survivor_alive?
+
+  def inventoryitem=(value)
+    @inventoryitem = value.is_a?(Integer) ? InventoriesItem.find(value) : value
+  end
 
   def quantity=(value)
     @quantity = value.to_i.abs
@@ -27,6 +33,13 @@ class Inventoriesitem::RemoveQuantityForm
       errors.merge!(item.errors)
       return false
     end
+  end
+
+  def is_survivor_alive?
+    survivor = Survivor.find_by(inventory_id: inventoryitem[:inventory_id])
+    return if survivor[:is_alive]
+
+    errors.add(:survivor, "Survivor is either dead or infected. It's inventory cannot be changed")
   end
 
   def has_enough?

@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_05_144944) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_24_104628) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "infection_claims", force: :cascade do |t|
+    t.bigint "whistleblower_id", null: false
+    t.bigint "infected_survivor_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["infected_survivor_id"], name: "index_infection_claims_on_infected_survivor_id"
+    t.index ["whistleblower_id", "infected_survivor_id"], name: "idx_on_whistleblower_id_infected_survivor_id_4cefb097c6", unique: true
+    t.index ["whistleblower_id"], name: "index_infection_claims_on_whistleblower_id"
+  end
 
   create_table "inventories", force: :cascade do |t|
     t.bigint "survivor_id"
@@ -55,11 +65,14 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_05_144944) do
     t.datetime "updated_at", null: false
     t.bigint "inventory_id"
     t.bigint "location_id"
-    t.boolean "is_archived"
+    t.integer "infection_claim_count", default: 0
+    t.integer "wallet", default: 0
     t.index ["inventory_id"], name: "index_survivors_on_inventory_id"
     t.index ["location_id"], name: "index_survivors_on_location_id"
   end
 
+  add_foreign_key "infection_claims", "survivors", column: "infected_survivor_id"
+  add_foreign_key "infection_claims", "survivors", column: "whistleblower_id"
   add_foreign_key "inventories", "survivors"
   add_foreign_key "locations", "survivors"
   add_foreign_key "survivors", "inventories"

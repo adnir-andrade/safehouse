@@ -1,5 +1,5 @@
 class SurvivorsController < ApplicationController
-  before_action :set_survivor, only: %i[show update destroy archive]
+  before_action :set_survivor, only: %i[show update destroy]
 
   def index
     @survivors = Survivor.all
@@ -35,14 +35,6 @@ class SurvivorsController < ApplicationController
     end
   end
   
-  def archive
-    if @survivor.update(is_archived: true)
-        render json: @survivor
-    else
-      render json: @survivor.errors, status: :unprocessable_entity
-    end
-  end
-
   def destroy
     render json: @survivor.destroy
   end
@@ -65,9 +57,8 @@ class SurvivorsController < ApplicationController
     }
   end
   
-  # Add is_alive as attribute to properly deal with UPDATE methods -.-
   def base_survivor_attributes
-    [:name, :gender, :age, :is_alive]
+    [:name, :gender, :age, :is_alive, :infection_claim_count, :wallet]
   end
 
 end
