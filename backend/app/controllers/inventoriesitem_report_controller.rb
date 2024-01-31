@@ -8,12 +8,14 @@ class InventoriesitemReportController < ReportsController
   def inventoriesitem_report
     data = InventoryitemQuery::sort_data(@sorter)
     headers = ["ID", "Surv. ID", "Survivor Name", "Inv. ID", "Item ID", "Item Name", "Qty"]
-    generate_report("inventoryitem", data, InventoriesitemPdf, headers)
+    title = "Inventory / Items"
+    generate_report("inventoryitem", data, InventoriesitemPdf, headers, title)
   end
 
   def average_item_by_survivor
     data = ItemBySurvivorQuery::sort_data(@sorter)
     headers = ['Item ID', 'Item', 'Avg. Amount By Survivor']
-    generate_report("inventoryitem", data, InventoriesitemPdf, headers)
+    title = "Items per Survivor"
+    generate_report("inventoryitem", data, InventoriesitemPdf, headers, title)
   end
 end
