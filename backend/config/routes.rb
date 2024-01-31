@@ -21,7 +21,10 @@ Rails.application.routes.draw do
     put '/remove-quantity', on: :member, to: 'inventoriesitem#remove_quantity', as: 'remove-quantity'
   end
 
-  get '/reports/survivors/pdf/(:option)', to: 'survivors_report#survivors_report', defaults: { format: :pdf }
-  get '/reports/items/pdf/(:option)', to: 'items_report#items_report', defaults: { format: :pdf }
+  ## Reports - Alphabetically ordered ##
   get '/reports/inventoriesitem/pdf/(:option)', to: 'inventoriesitem_report#inventoriesitem_report', defaults: { format: :pdf }
+  get '/reports/items/pdf/(:option)', to: 'items_report#items_report', defaults: { format: :pdf }
+  get '/reports/statistics/pdf/survivors-status', to: 'survivors_report#survivors_status', defaults: { format: :pdf }
+  get '/reports/statistics/pdf/item-by-survivor/(:option)', to: 'inventoriesitem_report#average_item_by_survivor', defaults: { format: :pdf }
+  get '/reports/survivors/pdf/(:option)', to: 'survivors_report#survivors_report', defaults: { format: :pdf }
 end
