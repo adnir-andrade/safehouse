@@ -1,4 +1,5 @@
 require_relative "../queries/inventoriesitem/index_query"
+require_relative "../queries/inventoriesitem/item_by_survivor_query"
 
 class InventoriesitemReportController < ReportsController
   include InventoryitemQuery
@@ -7,6 +8,12 @@ class InventoriesitemReportController < ReportsController
   def inventoriesitem_report
     data = InventoryitemQuery::sort_data(@sorter)
     headers = ["ID", "Surv. ID", "Survivor Name", "Inv. ID", "Item ID", "Item Name", "Qty"]
+    generate_report("inventoryitem", data, InventoriesitemPdf, headers)
+  end
+
+  def average_item_by_survivor
+    data = ItemBySurvivorQuery::sort_data(@sorter)
+    headers = ['Item ID', 'Item', 'Avg. Amount By Survivor']
     generate_report("inventoryitem", data, InventoriesitemPdf, headers)
   end
 end
