@@ -10,13 +10,13 @@ class SurvivorsReportController < ReportsController
     data = SurvivorQuery::sort_data(@sorter)
     headers = ['Name', 'Gender', 'Age']
     title = "Survivors"
-    generate_report("survivor", data, SurvivorsPdf, headers, title)
+    generate_report("survivor", data, headers, title)
   end
 
   def survivors_status
     data = StatusQuery::filter
     headers = ['Status', 'Quantity', 'Percentage']
     title = "Surivors Status"
-    generate_report("survivor", data, SurvivorsPdf, headers, title)
+    generate_report("survivor", data, headers, title)
   end
 end

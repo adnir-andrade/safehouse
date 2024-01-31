@@ -1,11 +1,9 @@
-class InventoriesitemPdf < ApplicationPdf
+class BasePdf < ApplicationPdf
   attr_reader :pdf
-
-  # TODO: Check if wouldn't be better to just refactor all of this. Is too redundant by now.
 
   def initialize(data:, headers:, title:)
     super()
-    @inventoriesitem = data
+    @data = data
     @headers = headers
     @title = title
   end
@@ -14,7 +12,7 @@ class InventoriesitemPdf < ApplicationPdf
     write_header
     write_title(@title)
     write_body do
-      write_table(header: @headers, data: @inventoriesitem)
+      write_table(header: @headers, data: @data)
     end
 
     write_footer

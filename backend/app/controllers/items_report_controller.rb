@@ -8,6 +8,6 @@ class ItemsReportController < ReportsController
     data = ItemQuery::sort_data(@sorter)
     headers = ['Name', 'Value', 'Description']
     title = "Items"
-    generate_report("item", data, ItemsPdf, headers, title)
+    generate_report("item", data, headers, title)
   end
 end
