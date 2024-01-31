@@ -1,6 +1,8 @@
 class SurvivorsPdf < ApplicationPdf
   attr_reader :pdf
 
+  # TODO: Check if wouldn't be better to just refactor all of this. Is too redundant by now.
+
   def initialize(data:, headers:, title:)
     super()
     @survivors = data
