@@ -14,7 +14,7 @@ class SurvivorsReportController < ReportsController
 
   def survivors_status
     data = StatusQuery::filter
-    headers = ['Not Infected', 'Infected/Dead']
+    headers = ['Status', 'Quantity', 'Percentage']
     generate_report("survivor", data, SurvivorsPdf, headers)
   end
 end
