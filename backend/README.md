@@ -2,6 +2,8 @@
 
 # The Safehouse - API
 
+[API Documentation](https://haotran.notion.site/Safehouse-API-690c17e6654d4b99b2ccbc9fe0e73f71?pvs=4)
+
 The Safehouse API is a single-version API developed using Ruby on Rails, using RSpec for automated testing and PostgreSQL as its database.
 
 ## Key Features:
