@@ -26,7 +26,7 @@ The Safehouse API is a single-version API developed using Ruby on Rails, using R
 - Ruby (~> 3.2.2)
 - Rails (~> 7.1.2)
 - PostgreSQL (~> 1.1):
-  This project uses PostgreSQL gem for connecting to the database, so you don't _really_ need to have it installed;
+  This project uses PostgreSQL gem for connecting to the database. If you don't have postgres installed, you can install the gem using `gem install pg`;
 
 ### Dependencies
 
