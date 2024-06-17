@@ -5,35 +5,59 @@ import Background from "../components/ui/Background";
 import Card from "../components/containers/Card";
 import { useRouter } from "expo-router";
 import FormInput from "../components/FormInput";
+import api from "../services/api"; // Certifique-se de importar Axios configurado
 
 type Survivor = {
   id?: string;
   name: string;
   age: number;
+  gender: string;
+  longitude: number;
+  latitude: number;
 };
 
-export default function create() {
+export default function Create() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
+  const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  const [longitude, setLongitude] = useState(0);
-  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState("");
 
   const handleNameChange = (name: string) => {
     setName(name);
   };
 
-  const handleAgeChange = (age: number | string) => {
-    setAge(Number(age));
+  const handleAgeChange = (age: string) => {
+    setAge(age);
   };
 
-  const handleGenderChange = (type: string) => {
-    setGender(type);
+  const handleGenderChange = (gender: string) => {
+    setGender(gender);
+  };
+
+  const handleLongitudeChange = (longitude: string) => {
+    setLongitude(longitude);
+  };
+
+  const handleLatitudeChange = (latitude: string) => {
+    setLatitude(latitude);
   };
 
   const handleSubmit = async () => {
-    router.push("/list");
+    try {
+      const newSurvivor: Survivor = {
+        name,
+        age: parseInt(age, 10),
+        gender,
+        longitude: parseFloat(longitude),
+        latitude: parseFloat(latitude),
+      };
+      await api.post("/survivors", newSurvivor);
+      router.push("/list");
+    } catch (error) {
+      console.error("Error creating survivor:", error);
+    }
   };
 
   return (
@@ -50,7 +74,7 @@ export default function create() {
           />
           <FormInput
             label="Age"
-            value={age.toString()}
+            value={age}
             onChangeText={handleAgeChange}
             placeholder="Age"
             keyboardType="numeric"
@@ -61,6 +85,20 @@ export default function create() {
             onChangeText={handleGenderChange}
             placeholder="Cat"
             placeholderTextColor="#999"
+          />
+          <FormInput
+            label="Longitude"
+            value={longitude}
+            onChangeText={handleLongitudeChange}
+            placeholder="Longitude"
+            keyboardType="numeric"
+          />
+          <FormInput
+            label="Latitude"
+            value={latitude}
+            onChangeText={handleLatitudeChange}
+            placeholder="Latitude"
+            keyboardType="numeric"
           />
           <Button title="Submit" onPress={handleSubmit} />
         </Card>
@@ -75,7 +113,7 @@ const styles = StyleSheet.create({
   },
   view: {
     margin: 25,
-    paddingHorizontal: 400,
+    paddingHorizontal: 20, // Ajuste conforme necessário
   },
   container: {
     padding: 4,

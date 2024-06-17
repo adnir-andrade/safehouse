@@ -1,10 +1,11 @@
-import { Button, View, StyleSheet } from "react-native";
+import { Button, View, StyleSheet, Alert } from "react-native";
 import React, { useState } from "react";
 import HeaderWithTitle from "../components/headers/HeaderWithMenu";
 import Background from "../components/ui/Background";
 import Card from "../components/containers/Card";
 import FormInput from "../components/FormInput";
 import { useRouter } from "expo-router";
+import api from "../services/api";
 
 type Survivor = {
   id?: string;
@@ -23,7 +24,14 @@ export default function survivorDelete() {
   };
 
   const handleDelete = async () => {
-    router.push("/list");
+    try {
+      await api.delete(`http://10.193.231.210:3000/survivors/${id}`);
+      Alert.alert("It's dead!", `Survivor with ID ${id} eliminated successfully.`);
+      router.push("/list");
+    } catch (error) {
+      console.error("Error deleting survivor:", error);
+      Alert.alert("Delete Failed", "An error occurred while deleting the survivor.");
+    }
   };
 
   return (

@@ -1,10 +1,11 @@
 import { Button, View, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeaderWithTitle from "../components/headers/HeaderWithMenu";
 import Background from "../components/ui/Background";
 import Card from "../components/containers/Card";
 import FormInput from "../components/FormInput";
-import { useRouter } from "expo-router";
+import { useGlobalSearchParams, useRouter } from "expo-router";
+import api from "../services/api";
 
 type Survivor = {
   id?: string;
@@ -16,9 +17,29 @@ type Survivor = {
 
 export default function update() {
   const router = useRouter();
+  const params = useGlobalSearchParams();
+
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
   const [gender, setGender] = useState("");
+
+
+  useEffect(() => {
+    const fetchSurvivor = async () => {
+      try {
+        const response = await api.get(`/survivors/${params.id}`);
+        const survivorData = response.data;
+        setName(survivorData.name);
+        setAge(survivorData.age);
+        setGender(survivorData.gender);
+      } catch (error) {
+        console.error("Error fetching survivor:", error);
+      }
+    };
+
+    fetchSurvivor();
+  }, [params.id]);
 
   const handleNameChange = (name: string) => {
     setName(name);
@@ -33,7 +54,17 @@ export default function update() {
   };
 
   const handleSubmit = async () => {
-    router.push("/list");
+    try {
+      console.log(age);
+      await api.patch(`/survivors/${params.id}`, {
+        name,
+        age,
+        gender,
+      });
+      router.push("/list");
+    } catch (error) {
+      console.error("Error updating survivor:", error);
+    }
   };
 
   return (

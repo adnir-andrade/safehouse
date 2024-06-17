@@ -10,6 +10,7 @@ export default function Card({ children }: PropsWithChildren) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 24,
     width: "100%",
     borderRadius: 15,
