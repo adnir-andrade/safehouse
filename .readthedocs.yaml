@@ -10,7 +10,7 @@ build:
   tools:
     python: "3.12"
     nodejs: "19"
-    ruby: "3.2.2"
+    ruby: "3.3"
 
 # Build documentation in the "docs/" directory with Sphinx (used by RTD)
 sphinx:
