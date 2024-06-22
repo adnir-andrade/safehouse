@@ -10,13 +10,10 @@ Avaliação 2 - Documentação do Deploy da Aplicação
    :maxdepth: 2
    :caption: Contents:
 
-   your_first_document
-   another_document
    backend
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-.. * :ref:`modindex`
 * :ref:`search`
