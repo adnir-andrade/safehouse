@@ -11,6 +11,7 @@ Avaliação 2 - Documentação do Deploy da Aplicação
    :caption: Contents:
 
    backend
+   frontend
 
 Indices and tables
 ==================
