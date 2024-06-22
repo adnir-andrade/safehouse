@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Your Project's documentation!
+Avaliação 2 - Documentação do Deploy da Aplicação 
 =========================================
 
 .. toctree::
@@ -12,10 +12,11 @@ Welcome to Your Project's documentation!
 
    your_first_document
    another_document
+   backend
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
+.. * :ref:`modindex`
 * :ref:`search`
