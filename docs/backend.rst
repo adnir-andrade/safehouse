@@ -66,21 +66,35 @@ Installation
 ================
 
 1. Clone the repository:
+
 .. code-block:: console
+
    git clone https://github.com/adnir-andrade/safehouse.git
+
 2. Navigate to the backend directory.
+   
 3. Install dependencies:
+   
 .. code-block:: console
+
     bundle install
+
 4. Set up the database with Docker Compose:
+   
 .. code-block:: console
+
     docker compose up
-_Note: The DB user and password in `docker-compose.yml` and `database.yml` are left as default for ease of use._
+
+*Note: The DB user and password in `docker-compose.yml` and `database.yml` are left as default for ease of use.*
+
 5. Migrate and seed the database:
+   
 .. code-block:: console
+
     rails db:create db:migrate
     RAILS_ENV=test rails db:migrate
     rails db:seed
+
 6. Use it!
 
 Test if everything is set up correctly by starting the project using `rails s` or executing its tests with `bundle exec rspec`.
