@@ -18,9 +18,3 @@ Avaliação 2 - Documentação do Deploy da Aplicação
    pipeline
    backend
    frontend
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
