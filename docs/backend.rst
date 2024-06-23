@@ -6,7 +6,7 @@ API Documentation
 
 You can find the API documentation `here <https://haotran.notion.site/Safehouse-API-690c17e6654d4b99b2ccbc9fe0e73f71?pvs=4>`_.
 
-The Safehouse API is a single-version API developed using Ruby on Rails, using RSpec for automated testing, and PostgreSQL as its database.
+The Safehouse API is a single-version API developed using Ruby on  Rails, using RSpec for automated testing, and PostgreSQL as the database.
 
 Key Features
 -----------------
@@ -27,7 +27,7 @@ Create and manage survivors, locations, and items, keeping track of their inform
 Denounce System
 ~~~~~~~~~~~~~~~~
 
-The "Denounce System" is used to flag survivors as infected. After receiving 5 or more reports, a survivor is marked as "infected", considered as dead, and banned from trades and excluded from the majority of reports.
+The “Denounce System” is used to flag survivors as infected. After receiving 5 or more reports, a survivor is marked as “infected”,  considered dead, banned from trades, and excluded from most of the reports.
 
 Trading System
 ~~~~~~~~~~~~~~~~
