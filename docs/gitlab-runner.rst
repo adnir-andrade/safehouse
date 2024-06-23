@@ -128,7 +128,7 @@ Register a New Runner
 
     sudo gitlab-runner register
 
-The registration process will begin. During this process, you will be prompted for several details. You must fill them accordingly to:
+The registration process will begin. During this process, you will be prompted for several details. You must fill them accordingly:
 
 - GitLab instance URL: `https://gitlab.safehouse.com`
 
