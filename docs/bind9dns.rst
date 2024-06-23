@@ -1,4 +1,4 @@
-DNS and Certificate Authority (CA)
+DNS
 ===================
 
 Installation and Configuration Guide
