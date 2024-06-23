@@ -7,7 +7,7 @@ Avaliação 2 - Documentação do Deploy da Aplicação
 =========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    about
