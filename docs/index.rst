@@ -11,6 +11,7 @@ Avaliação 2 - Documentação do Deploy da Aplicação
    :caption: Contents:
 
    about
+   bind9dns
    backend
    frontend
 
