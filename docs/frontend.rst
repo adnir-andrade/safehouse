@@ -33,5 +33,8 @@ Installation
 
     yarn start
 
-
 5. Use it!
+
+-----------------
+
+And that's basically it... Expo is the best thing ever created.
