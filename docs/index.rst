@@ -10,6 +10,7 @@ Avaliação 2 - Documentação do Deploy da Aplicação
    :maxdepth: 2
    :caption: Contents:
 
+   about
    backend
    frontend
 
