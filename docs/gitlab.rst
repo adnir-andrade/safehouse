@@ -58,7 +58,9 @@ Intermission - CA Setup (GitLab VM)
 Remember when the author mentioned that the CA session would be lengthy? That's because it can only end here at this point. 
 Before we can proceed any further, we need to properly set up, configure, and sign our CA. As described in the "Install self-managed GitLab" session of the Gitlab website:
 
-> For https:// URLs, GitLab will automatically request a certificate with Let's Encrypt, which requires inbound HTTP access and a valid hostname. You can also use your own certificate.
+```
+For https:// URLs, GitLab will automatically request a certificate with Let's Encrypt, which requires inbound HTTP access and a valid hostname. You can also use your own certificate.
+```
 
 So this is exactly what we're doing.
 
