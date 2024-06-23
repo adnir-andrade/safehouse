@@ -1,4 +1,4 @@
-Setting Up Your DNS and Certificate Authority (CA)
+DNS and Certificate Authority (CA)
 ===================
 
 Installation and Configuration Guide
