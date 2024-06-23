@@ -6,9 +6,12 @@ Installation and Configuration Guide
 
 This guide will help you set up and configure various components needed for the "Cloud Development and Operations" project.
 Before you start, be sure to install Multipass on your machine. You can follow these steps on your local environment, but they might (and will) destroy your machine.
+
 ---------------------
+
 DNS Setup - Installing
 ~~~~~~~~~~~~~~~~
+
 This is what you need to install in order to make your DNS Server work
 
 Update the Package List
@@ -46,7 +49,9 @@ Install DNS Utilities
     sudo apt-get install dnsutils -y
 
 This command installs DNS utilities such as dig, nslookup, and others that are useful for querying DNS servers (in case we need to test things)
+
 ---------------------
+
 DNS Setup - Configuring
 ~~~~~~~~~~~~~~~~
 
@@ -115,6 +120,7 @@ This command creates a new file for your DNS zone. Here, you will define the DNS
    You can always come back here at a later moment - Just be sure to comment the line if you didn't create the VM yet.
 
 ---------------------
+
 And you're all set! Your DNS should be working right now.
 If it doesn't work, you need to install `resolvconf` on your host using:
 
