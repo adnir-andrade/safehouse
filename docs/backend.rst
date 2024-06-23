@@ -35,10 +35,10 @@ Trading System
 A simple but consistent trading system that supports item-for-item, item-for-cash, or mixed transactions (think of a Fallout-like trading system).
 
 Getting Started
-================
+-----------------
 
 Prerequisites
-----------------
+~~~~~~~~~~~~~~~~
 
 - Ruby (~> 3.2.2)
 - Rails (~> 7.1.2)
@@ -47,7 +47,7 @@ Prerequisites
 This project uses the PostgreSQL gem for connecting to the database. If you don't have PostgreSQL installed, you can install the gem using `gem install pg`.
 
 Dependencies
-----------------
+~~~~~~~~~~~~~~~~
 
 The dependencies below are included in the `Gemfile` and will be automatically installed using `bundle install`.
 
@@ -63,7 +63,7 @@ The dependencies below are included in the `Gemfile` and will be automatically i
 - Factory Bot Rails (development, test): A library for setting up Ruby objects as test data.
 
 Installation
-================
+-----------------
 
 1. Clone the repository:
 
