@@ -45,7 +45,7 @@ Save the Certificate
 Next, move the certificate to the appropriate directory. This command moves your ca.crt to the `/usr/local/share/ca-certificates/` directory where it will be recognized by the system.
 
 .. note:: 
-    Don't try to use `multipass transfer` to transfer directly to this path. Multipass can't do this because of permissions issues.
+    Don't try to use `multipass transfer` to transfer directly to this path. Multipass won't do this because of permissions issues.
 
 Update CA Certificates
 ^^^^^^^^^^^^^^^^
@@ -129,11 +129,17 @@ Register a New Runner
     sudo gitlab-runner register
 
 The registration process will begin. During this process, you will be prompted for several details. You must fill them accordingly to:
+
 - GitLab instance URL: `https://gitlab.safehouse.com`
+
 - Registration token: Paste the registration token you copied earlier.
+
 - Description: Anything that you like
+
 - Tags: Optional, provide tags to categorize the Runner if you want.
+
 - Executor: Choose the executor `docker` for the Runner, as we are going to use Docker DIND.
+
 - Docker Image: `docker:latest`
 
 After completing the registration, return to the GitLab web interface to verify that the Runner appears in the "Runners" section of your project. If it does, you can proceed to the next part.
