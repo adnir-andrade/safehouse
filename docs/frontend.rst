@@ -37,4 +37,4 @@ Installation
 
 -----------------
 
-And that's basically it... Expo is the best thing ever created.
+And that's basically it... Expo is the best thing ever created!
