@@ -31,7 +31,7 @@ Follow these steps to install and set up a GitLab Runner, which will execute you
 Working with "The Safehouse" Project
 ~~~~~~~~~~~~~~~~~~~~~
 
-The documentation guides you through working with "The Safehouse" project using GitHub as an example. However, as you wil lbe working with your local GitLab, you can follow the same steps, but substituting the GitHub repository with your local GitLab repository.
+The documentation guides you through working with "The Safehouse" project using GitHub as an example. However, as you will be working with your local GitLab, you can follow the same steps, but substituting the GitHub repository with your local GitLab repository.
 Example:
 
 Instead of:
@@ -52,7 +52,7 @@ The CI/CD pipeline is designed to build and test the project using a Docker-in-D
 Deployment
 ^^^^^^^^^^^^^^^^
 
-At the end of the pipeline, the backend of "The Safehouse" project is deployed inside the same container. You can then start the frontend locally, as it is preconfigured to connect to the backend server running on 0.0.0.0:3000.
+At the end of the pipeline, the backend of "The Safehouse" project is deployed inside the same container. You can then start the frontend locally, as it is preconfigured to connect to the backend server running on `0.0.0.0:3000`.
 
 ------------------
 
