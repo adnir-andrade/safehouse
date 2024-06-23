@@ -173,4 +173,4 @@ And finally! You're ready to start developing using GitLab.
 
 In the next session, you will find some basic instructions for a new Dev to start working on the project. But mostly, the hard work is done.
 
-Pat yourself in the back and congratulations!
+Pat yourself on the back and congratulations!
