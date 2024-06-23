@@ -56,6 +56,8 @@ Branching and Merge Requests
 
 Before starting work on a new feature, the developer should create a new branch. Ensure that both the build and tests pass successfully on this branch before creating a merge request.
 
+-----------------
+
 Pipeline Stages
 ~~~~~~~~~~~~~~~~
 
@@ -84,3 +86,11 @@ This stage runs the RSpec tests to ensure that the application is functioning co
 In the final stage, the application is deployed by starting the Rails server. This allows the application to be accessible at 0.0.0.0:3000 (or simply localhost:3000).
 
 This stage only run on the main branch. So to run your own server to develop, use clone the project and work on it locally.
+
+-----------------
+
+Now you know everything there is to know about Safehouse's GitLab.
+
+In the next pages, you will learn how to clone and start working on each of the repositories of this monorepo.
+
+Good luck, and may your code never break!
