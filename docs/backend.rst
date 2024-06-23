@@ -8,11 +8,10 @@ You can find the API documentation `here <https://haotran.notion.site/Safehouse-
 
 The Safehouse API is a single-version API developed using Ruby on  Rails, using RSpec for automated testing, and PostgreSQL as the database.
 
-Key Features
 -----------------
 
-Core Functionalities
-~~~~~~~~~~~~~~~~~~~~~
+Key Features
+-----------------
 
 PDF Report Generation
 ~~~~~~~~~~~~~~~~~~~~~
@@ -33,6 +32,8 @@ Trading System
 ~~~~~~~~~~~~~~~~
 
 A simple but consistent trading system that supports item-for-item, item-for-cash, or mixed transactions (think of a Fallout-like trading system).
+
+-----------------
 
 Getting Started
 -----------------
@@ -85,7 +86,8 @@ Installation
 
     docker compose up
 
-*Note: The DB user and password in `docker-compose.yml` and `database.yml` are left as default for ease of use.*
+.. note:: text
+    *The DB user and password in `docker-compose.yml` and `database.yml` are left as default for ease of use.*
 
 5. Migrate and seed the database:
    
@@ -97,4 +99,6 @@ Installation
 
 6. Use it!
 
-Test if everything is set up correctly by starting the project using `rails s` or executing its tests with `bundle exec rspec`.
+-----------------
+
+Test if everything is set up correctly by starting the project using `rails s -b 0.0.0.0` or executing its tests with `bundle exec rspec`.
