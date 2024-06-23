@@ -51,3 +51,36 @@ Make sure to read the documentation for both the Backend and Frontend sections, 
 Pipeline Guide:
 -----------------
 
+Branching and Merge Requests
+~~~~~~~~~~~~~~~~
+
+Before starting work on a new feature, the developer should create a new branch. Ensure that both the build and tests pass successfully on this branch before creating a merge request.
+
+Pipeline Stages
+~~~~~~~~~~~~~~~~
+
+The pipeline for this project consists of the following stages:
+
+1) Cleanup
+^^^^^^^^^^^^^^^^
+
+This stage ensures that any previous Docker containers, images, and volumes are removed before starting a new build. This prevents potential conflicts and ensures a clean environment.
+
+2) Build
+^^^^^^^^^^^^^^^^
+
+In the build stage, Docker Compose is used to build the images and start the services. It also sets up the database for both development and testing environments.
+
+This process is slow, and it can take up to 15 minutes to finish.
+
+3) Test
+^^^^^^^^^^^^^^^^
+
+This stage runs the RSpec tests to ensure that the application is functioning correctly. The tests are executed within the Docker container.
+
+4) Deploy
+^^^^^^^^^^^^^^^^
+
+In the final stage, the application is deployed by starting the Rails server. This allows the application to be accessible at 0.0.0.0:3000 (or simply localhost:3000).
+
+This stage only run on the main branch. So to run your own server to develop, use clone the project and work on it locally.
