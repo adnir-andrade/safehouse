@@ -418,6 +418,7 @@ Apply the configuration changes by reconfiguring GitLab.
 ---------------------
 
 And it's over!! This part, at least.
+
 You can now access your local GitLab instance at https://gitlab.safehouse.com. If you are already tired, imagine how your computer feels with all those VMs. But don't worry, it will get worse!
 For now, let's take a moment to configure our Gitlab so we can finally configure our GitLab Runner and start developing our application.
 

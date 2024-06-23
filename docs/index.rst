@@ -14,6 +14,7 @@ Avaliação 2 - Documentação do Deploy da Aplicação
    bind9dns
    ca
    gitlab
+   gitlab-runner
    backend
    frontend
 
