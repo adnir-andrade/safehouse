@@ -15,6 +15,7 @@ Avaliação 2 - Documentação do Deploy da Aplicação
    ca
    gitlab
    gitlab-runner
+   pipeline
    backend
    frontend
 
