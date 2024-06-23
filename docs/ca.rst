@@ -67,6 +67,7 @@ Edit the vars file
 Open the vars file with nano to configure Easy-RSA settings. You can replace the content with the following:
 
 .. code-block:: console
+    
     if [ -z "$EASYRSA_CALLER" ]; then
     echo "You appear to be sourcing an Easy-RSA _vars_ file. This is" >&2
     echo "no longer necessary and is disallowed. See the section called" >&2
