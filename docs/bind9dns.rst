@@ -122,7 +122,7 @@ This command creates a new file for your DNS zone. Here, you will define the DNS
 ---------------------
 
 And you're all set! Your DNS should be working right now.
-If it doesn't work, you need to install `resolvconf` on your host using:
+But if it doesn't work, you need to install `resolvconf` on your host using:
 
 .. code-block:: console
 
@@ -142,4 +142,6 @@ and add the following line at the top of the list:
 
 The IP right after `nameserver` must match your DNS/CA VM.
 
-Now we can proceed to configure the CA VM
+---------------------
+
+With the DNS setup complete, we can now move on to configuring the CA (Certificate Authority) VM.
