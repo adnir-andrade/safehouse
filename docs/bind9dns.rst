@@ -113,3 +113,12 @@ This command creates a new file for your DNS zone. Here, you will define the DNS
 
    This is the moment where you need to replace the IP addresses for `dns`, `ca`, `gitlab`, and `gitlab-runner` with the respective IPs of the VMs created for each environment. Ensure you use the IP addresses assigned by your Multipass setup.
    You can always come back here at a later moment - Just be sure to comment the line if you didn't create the VM yet.
+
+=====================
+
+---------------------
+
+*********************
+
+.....................
+
