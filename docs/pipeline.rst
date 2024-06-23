@@ -83,7 +83,7 @@ This stage runs the RSpec tests to ensure that the application is functioning co
 4) Deploy
 ^^^^^^^^^^^^^^^^
 
-In the final stage, the application is deployed by starting the Rails server. This allows the application to be accessible at `0.0.0.0:3000`` (or simply localhost:3000).
+In the final stage, the application is deployed by starting the Rails server. This allows the application to be accessible at `0.0.0.0:3000` (or simply localhost:3000).
 
 This stage only run on the main branch. So to develop, clone the project, and work on it locally.
 
