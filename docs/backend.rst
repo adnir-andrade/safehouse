@@ -86,10 +86,10 @@ Installation
 
     docker compose up
 
-.. note:: text
+.. note::
     *The DB user and password in `docker-compose.yml` and `database.yml` are left as default for ease of use.*
 
-5. Migrate and seed the database:
+1. Migrate and seed the database:
    
 .. code-block:: console
 
