@@ -6,7 +6,7 @@ Installation and Configuration Guide
 
 This guide will help you set up and configure various components needed for the "Cloud Development and Operations" project.
 Before you start, be sure to install Multipass on your machine. You can follow these steps on your local environment, but they might (and will) destroy your machine.
-
+---------------------
 DNS Setup - Installing
 ~~~~~~~~~~~~~~~~
 This is what you need to install in order to make your DNS Server work
@@ -46,7 +46,7 @@ Install DNS Utilities
     sudo apt-get install dnsutils -y
 
 This command installs DNS utilities such as dig, nslookup, and others that are useful for querying DNS servers (in case we need to test things)
-
+---------------------
 DNS Setup - Configuring
 ~~~~~~~~~~~~~~~~
 
@@ -114,11 +114,26 @@ This command creates a new file for your DNS zone. Here, you will define the DNS
    This is the moment where you need to replace the IP addresses for `dns`, `ca`, `gitlab`, and `gitlab-runner` with the respective IPs of the VMs created for each environment. Ensure you use the IP addresses assigned by your Multipass setup.
    You can always come back here at a later moment - Just be sure to comment the line if you didn't create the VM yet.
 
-=====================
-
 ---------------------
+And you're all set! Your DNS should be working right now.
+If it doesn't work, you need to install `resolvconf` on your host using:
 
-*********************
+.. code-block:: console
 
-.....................
+    sudo apt-get install resolvconf -y
 
+Then access this file with `nano`:
+
+.. code-block:: console
+
+    sudo nano /etc/resolvconf/resolv.conf.d/head
+
+and add the following line at the top of the list:
+
+.. code-block:: text
+
+    nameserver 10.193.231.233
+
+The IP right after `nameserver` must match your DNS/CA VM.
+
+Now we can proceed to configure the CA VM
