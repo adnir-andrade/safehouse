@@ -26,3 +26,8 @@ This monoproject, as of right now, consists of two projects:
 - As a manager, you'll be able to manage your survivors, oversee the local shop (inventory, prices, availability), and configure your outpost settings;
 
 _All of this is a work in progress for study and showcase purposes, and there is no plan to publish this in any way._
+
+## Readthedocs
+
+Leaving this here to format later, but this was my final submission to my second DevOps 2 project.
+https://safehouse.readthedocs.io/en/latest/index.html
